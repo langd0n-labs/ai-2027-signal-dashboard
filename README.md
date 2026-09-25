@@ -141,4 +141,4 @@ _This document reflects the project design as of June 2025._
 
 ---
 
-AI-Attribution: AI-G ([what this means](https://langd0n.com/ai-attribution)). Langdon White directed the design; ChatGPT drafted it in June 2025. Edited 2026-09-25: added the source citation, shortened the analyst section, and removed an IDE note. The unedited original is [`docs/original-design-2025-06.md`](docs/original-design-2025-06.md).
+AI-Attribution: AI-G ([what this means](https://langd0n.com/ai-attribution)). Langdon White directed the design; ChatGPT drafted it in June 2025. Edited 2026-09-25: added the source citation, shortened the analyst section, and removed an IDE note.
