@@ -1,6 +1,6 @@
 # OPS.md
 
-This file is the working guide for people and AI agents who change this repository. `README.md` describes the project. Read it first.
+Read `README.md` first.
 
 ## Work in issues and pull requests
 
