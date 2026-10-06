@@ -1,0 +1,69 @@
+"""Run with: python pipeline/test_pipeline.py"""
+
+import unittest
+
+from classify_signals import validate
+from fetch_sources import _month_avg, month_bounds, prev_month
+from run import last_complete_month, merge, month, months
+
+SIGNALS = [{"id": i, "name": i, "accelerating": "a", "stabilizing": "s"} for i in ("policy", "labor")]
+
+
+def entry(signal, period, status="unclear"):
+    return {"signal": signal, "period": period, "status": status}
+
+
+class Periods(unittest.TestCase):
+    def test_month_math(self):
+        self.assertEqual(prev_month("2026-01"), "2025-12")
+        self.assertEqual(months("2025-11", "2026-02"), ["2025-11", "2025-12", "2026-01", "2026-02"])
+        self.assertEqual(month_bounds("2028-02")[1].day, 29)
+
+    def test_last_complete_month(self):
+        from datetime import date
+        self.assertEqual(last_complete_month(date(2026, 1, 3)), "2025-12")
+
+    def test_month_rejects_bad_input(self):
+        for bad in ("2026-13", "2026-1", "26-01", "2026-01; rm -rf /", None):
+            with self.assertRaises(Exception):
+                month(bad)
+
+
+class Merge(unittest.TestCase):
+    def test_replaces_same_key_and_keeps_others(self):
+        doc = {"entries": [entry("policy", "2026-04"), entry("labor", "2026-04")]}
+        out = merge(doc, [entry("policy", "2026-04", "accelerating")], SIGNALS, "now")
+        self.assertEqual([(e["signal"], e["status"]) for e in out["entries"]], [("policy", "accelerating"), ("labor", "unclear")])
+
+    def test_drops_sample_entries(self):
+        doc = {"sample": True, "entries": [entry("labor", "2026-04")]}
+        out = merge(doc, [entry("policy", "2026-05")], SIGNALS, "now")
+        self.assertFalse(out["sample"])
+        self.assertEqual(len(out["entries"]), 1)
+
+    def test_sorted_by_period_then_config_order(self):
+        out = merge({}, [entry("labor", "2026-05"), entry("policy", "2026-05"), entry("labor", "2026-04")], SIGNALS, "now")
+        self.assertEqual([(e["period"], e["signal"]) for e in out["entries"]], [("2026-04", "labor"), ("2026-05", "policy"), ("2026-05", "labor")])
+
+
+class Validate(unittest.TestCase):
+    def test_accepts_good(self):
+        self.assertEqual(validate({"status": "stabilizing", "justification": " ok ", "confidence": 3})["justification"], "ok")
+
+    def test_rejects_bad(self):
+        for bad in ({"status": "up", "justification": "x", "confidence": 3},
+                    {"status": "unclear", "justification": "x", "confidence": 9},
+                    {"status": "unclear", "justification": " ", "confidence": 2}):
+            with self.assertRaises(ValueError):
+                validate(bad)
+
+
+class Gdelt(unittest.TestCase):
+    def test_month_avg(self):
+        pts = [{"date": "20260401T000000Z", "value": 1.0}, {"date": "20260402T000000Z", "value": 3.0}, {"date": "20260301T000000Z", "value": 9}]
+        self.assertEqual(_month_avg(pts, "2026-04"), 2.0)
+        self.assertIsNone(_month_avg(pts, "2026-05"))
+
+
+if __name__ == "__main__":
+    unittest.main()
