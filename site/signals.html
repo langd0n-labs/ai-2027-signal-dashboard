@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How the signals were chosen · AI 2027 Signal Dashboard</title>
+  <meta name="description" content="The five signals the dashboard tracks, what each status means, and the data sources behind them.">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="signals">
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">AI 2027 <span>Signal</span> Dashboard</a>
+      <nav class="site-nav" aria-label="Site">
+      <a href="index.html">Dashboard</a>
+      <a href="about.html">What is AI 2027?</a>
+      <a href="signals.html" aria-current="page">How the signals were chosen</a>
+      <a href="method.html">How classification works</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <article class="prose">
+      <h1>How the signals were chosen</h1>
+      <p>After reading AI 2027, ChatGPT was prompted to generate a set of “signals to watch” across policy, labor, technology, public opinion, and the economy. Langdon White directed the project and its design. The signals below are the result. Each has a plain statement of what counts as accelerating toward the scenario and what counts as stabilizing.</p>
+      <h2>The five signals</h2>
+      <dl id="definitions"><dt>Loading…</dt></dl>
+      <h2>Data sources</h2>
+      <p>Each month the pipeline collects evidence for each signal from public sources that can return data for a past date:</p>
+      <ul>
+        <li><a href="https://www.federalregister.gov/developers/documentation/api/v1">Federal Register API</a>: United States federal rules and notices that mention AI.</li>
+        <li><a href="https://fred.stlouisfed.org/">FRED</a>, Federal Reserve Bank of St. Louis: unemployment, jobless claims, layoffs, productivity, wages, and labor share.</li>
+        <li><a href="https://info.arxiv.org/help/api/index.html">arXiv API</a>: monthly volume of AI research papers. Thank you to arXiv for use of its open access interoperability.</li>
+        <li><a href="https://www.gdeltproject.org/">GDELT DOC 2.0 API</a>: worldwide news coverage of AI, and its tone.</li>
+        <li><a href="https://hn.algolia.com/api">Hacker News Algolia API</a>: headlines of stories discussed by a technology audience. Used for headlines only, not as a measure of volume.</li>
+        <li><a href="https://epoch.ai/data/notable-ai-models">Epoch AI, Notable AI Models</a> (CC BY 4.0): releases of notable AI models and their training compute.</li>
+      </ul>
+      <p>Next: <a href="method.html">how the classification works</a>.</p>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>AI-Attribution: AI-G (<a href="https://langd0n.com/ai-attribution">what this means</a>). Source code and data: <a href="https://github.com/langd0n-labs/ai-2027-signal-dashboard">github.com/langd0n-labs/ai-2027-signal-dashboard</a>.</p>
+      <p>Tracks signals related to the <a href="https://ai-2027.com">AI 2027</a> scenario. Not affiliated with the AI Futures Project.</p>
+    </div>
+  </footer>
+</body>
+</html>

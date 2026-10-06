@@ -1,0 +1,606 @@
+{
+  "schema": 1,
+  "updated": "2026-10-05T12:00:00Z",
+  "sample": true,
+  "period": "month",
+  "overall": null,
+  "signals": [
+    {
+      "id": "policy",
+      "name": "Policy",
+      "accelerating": "Policy moves that speed the race or loosen oversight: deregulation, preemption of state AI laws, national-security race framing, public compute buildouts.",
+      "stabilizing": "Binding rules that slow or steer deployment: safety requirements, labor protections, algorithmic-management laws, UBI pilots."
+    },
+    {
+      "id": "labor",
+      "name": "Labor market",
+      "accelerating": "Layoffs attributed to AI rise, unemployment or claims climb, and hiring falls, especially in white-collar and entry-level work.",
+      "stabilizing": "Labor data hold steady or improve, and layoffs are not being attributed to AI."
+    },
+    {
+      "id": "technology",
+      "name": "Technology",
+      "accelerating": "Frontier capability jumps, especially in autonomous agents and AI doing AI research, faster releases, and more training compute.",
+      "stabilizing": "Benchmarks plateau, releases slow, or compute and energy limits bite."
+    },
+    {
+      "id": "opinion",
+      "name": "Public opinion",
+      "accelerating": "AI becomes a top public concern: rising coverage, more negative tone, protests, AI as an election issue.",
+      "stabilizing": "Public attention and alarm about AI hold steady or fall."
+    },
+    {
+      "id": "economy",
+      "name": "Economy",
+      "accelerating": "Productivity outpaces wages, labor's share of income falls, and AI investment surges.",
+      "stabilizing": "Wages keep pace with productivity and labor's share holds."
+    }
+  ],
+  "entries": [
+    {
+      "signal": "policy",
+      "period": "2026-04",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Federal Register",
+          "url": "https://www.federalregister.gov/"
+        },
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-05",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Federal Register",
+          "url": "https://www.federalregister.gov/"
+        },
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-06",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "Federal Register",
+          "url": "https://www.federalregister.gov/"
+        },
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-07",
+      "status": "stabilizing",
+      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "Federal Register",
+          "url": "https://www.federalregister.gov/"
+        },
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-08",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "Federal Register",
+          "url": "https://www.federalregister.gov/"
+        },
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-09",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "Federal Register",
+          "url": "https://www.federalregister.gov/"
+        },
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "scheduled",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-04",
+      "status": "stabilizing",
+      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        },
+        {
+          "title": "Hacker News",
+          "url": "https://news.ycombinator.com/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-05",
+      "status": "stabilizing",
+      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        },
+        {
+          "title": "Hacker News",
+          "url": "https://news.ycombinator.com/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-06",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        },
+        {
+          "title": "Hacker News",
+          "url": "https://news.ycombinator.com/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-07",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        },
+        {
+          "title": "Hacker News",
+          "url": "https://news.ycombinator.com/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-08",
+      "status": "stabilizing",
+      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        },
+        {
+          "title": "Hacker News",
+          "url": "https://news.ycombinator.com/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-09",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        },
+        {
+          "title": "Hacker News",
+          "url": "https://news.ycombinator.com/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "scheduled",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-04",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "arXiv",
+          "url": "https://arxiv.org/"
+        },
+        {
+          "title": "Epoch AI",
+          "url": "https://epoch.ai/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-05",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "arXiv",
+          "url": "https://arxiv.org/"
+        },
+        {
+          "title": "Epoch AI",
+          "url": "https://epoch.ai/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-06",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "arXiv",
+          "url": "https://arxiv.org/"
+        },
+        {
+          "title": "Epoch AI",
+          "url": "https://epoch.ai/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-07",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "arXiv",
+          "url": "https://arxiv.org/"
+        },
+        {
+          "title": "Epoch AI",
+          "url": "https://epoch.ai/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-08",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "arXiv",
+          "url": "https://arxiv.org/"
+        },
+        {
+          "title": "Epoch AI",
+          "url": "https://epoch.ai/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-09",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "arXiv",
+          "url": "https://arxiv.org/"
+        },
+        {
+          "title": "Epoch AI",
+          "url": "https://epoch.ai/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "scheduled",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-04",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-05",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-07",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-08",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-09",
+      "status": "accelerating",
+      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "GDELT Project",
+          "url": "https://www.gdeltproject.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "scheduled",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-04",
+      "status": "stabilizing",
+      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-05",
+      "status": "stabilizing",
+      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-06",
+      "status": "stabilizing",
+      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-07",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-08",
+      "status": "unclear",
+      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "backfill",
+      "classified_at": "2026-10-05T12:00:00Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-09",
+      "status": "stabilizing",
+      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED, St. Louis Fed",
+          "url": "https://fred.stlouisfed.org/"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "run": "scheduled",
+      "classified_at": "2026-10-05T12:00:00Z"
+    }
+  ]
+}

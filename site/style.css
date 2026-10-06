@@ -1,0 +1,155 @@
+:root {
+  --bg: #f6f3ec;
+  --surface: #fffdf8;
+  --ink: #1d1b18;
+  --muted: #6b655b;
+  --rule: #d9d2c3;
+  --face: #fbf8f1;
+  --accel: #b3261e;
+  --stable: #2f6b5f;
+  --unclear: #7a7468;
+  --accent: #b3261e;
+  --focus: #1f5fbf;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15140f;
+    --surface: #1e1c17;
+    --ink: #ece6d8;
+    --muted: #a59e8f;
+    --rule: #39352c;
+    --face: #24221c;
+    --accel: #f0766c;
+    --stable: #6fbfab;
+    --unclear: #a59e8f;
+    --accent: #f0766c;
+    --focus: #8ab4ff;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 var(--sans);
+}
+
+a { color: inherit; text-underline-offset: 2px; }
+a:hover { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+/* Header and footer */
+.site-header { border-bottom: 1px solid var(--rule); }
+.site-header .wrap { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-top: 20px; padding-bottom: 16px; }
+.brand { font: 600 1.15rem/1.2 var(--serif); text-decoration: none; letter-spacing: 0.01em; }
+.brand span { color: var(--accent); }
+.site-nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 0.9rem; }
+.site-nav a { color: var(--muted); text-decoration: none; }
+.site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--ink); text-decoration: underline; }
+
+.site-footer { border-top: 1px solid var(--rule); margin-top: 64px; padding: 24px 0 40px; color: var(--muted); font-size: 0.85rem; }
+.site-footer p { margin: 4px 0; }
+
+/* Banner */
+.banner { background: var(--accent); color: var(--bg); font-weight: 600; text-align: center; padding: 8px 16px; font-size: 0.9rem; }
+.banner[hidden] { display: none; }
+
+/* Intro + overall */
+.intro { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px; align-items: center; padding: 40px 0 32px; border-bottom: 1px solid var(--rule); }
+.intro h1 { font: 500 clamp(1.9rem, 4vw, 2.8rem)/1.1 var(--serif); margin: 0 0 12px; letter-spacing: -0.01em; }
+.lede { font-size: 1.05rem; color: var(--muted); margin: 0 0 12px; max-width: 38em; }
+.updated { font: 0.85rem/1.4 var(--mono); color: var(--muted); margin: 0; }
+
+.overall { display: flex; gap: 20px; align-items: center; background: var(--surface); border: 1px solid var(--rule); padding: 20px; }
+.overall .dial { width: 120px; flex: none; }
+.overall h2 { font: 600 0.8rem/1 var(--sans); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 0 0 8px; }
+.overall p { margin: 0; }
+.overall .note { color: var(--muted); font-size: 0.9rem; margin-top: 6px; }
+
+/* Signal cards */
+.section-title { font: 600 0.8rem/1 var(--sans); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 32px 0 16px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 20px; }
+
+.card { background: var(--surface); border: 1px solid var(--rule); border-top: 4px solid var(--status, var(--rule)); padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.card[data-status="accelerating"] { --status: var(--accel); }
+.card[data-status="stabilizing"] { --status: var(--stable); }
+.card[data-status="unclear"] { --status: var(--unclear); }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.card h3 { font: 600 1.3rem/1.2 var(--serif); margin: 0; }
+.period { font: 0.8rem/1 var(--mono); color: var(--muted); white-space: nowrap; }
+
+.reading { display: flex; gap: 16px; align-items: center; }
+.reading .dial { width: 96px; flex: none; }
+.status { font-weight: 700; font-size: 1.05rem; color: var(--status, var(--muted)); display: flex; align-items: center; gap: 6px; }
+.meta-line { color: var(--muted); font-size: 0.85rem; margin: 2px 0 0; }
+.meta-line.model { font-family: var(--mono); font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.justification { margin: 0; }
+
+.history { display: flex; flex-direction: column; gap: 6px; }
+.history-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.strip { display: flex; gap: 4px; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
+.mark { width: 30px; height: 30px; display: grid; place-items: center; font-size: 0.75rem; line-height: 1; border: 2px solid var(--c, var(--rule)); color: var(--c, var(--muted)); }
+.mark[data-status="accelerating"] { --c: var(--accel); }
+.mark[data-status="stabilizing"] { --c: var(--stable); }
+.mark[data-status="unclear"] { --c: var(--unclear); }
+.mark[data-run="scheduled"] { background: var(--c); color: var(--surface); }
+.mark[data-run="backfill"] { border-style: dashed; }
+.mark.none { border-style: dotted; color: var(--muted); }
+.strip-box { width: fit-content; max-width: 100%; display: flex; flex-direction: column; gap: 4px; }
+.strip-axis { display: flex; justify-content: space-between; gap: 12px; font: 0.7rem/1 var(--mono); color: var(--muted); }
+
+.sources { font-size: 0.85rem; }
+.sources h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 4px; font-weight: 600; }
+.sources ul { margin: 0; padding-left: 18px; }
+.sources li { overflow-wrap: anywhere; }
+
+/* Dial */
+.dial svg { display: block; width: 100%; height: auto; }
+.dial .face { fill: var(--face); stroke: var(--ink); stroke-width: 1.5; }
+.dial .tick { stroke: var(--muted); stroke-width: 1.5; }
+.dial .tick.major { stroke: var(--ink); stroke-width: 3; }
+.dial .wedge { fill: var(--status, var(--unclear)); opacity: 0.22; }
+.dial .hand { stroke: var(--ink); stroke-linecap: round; }
+.dial .hand.minute { stroke: var(--status, var(--ink)); stroke-width: 3; }
+.dial .hand.hour { stroke-width: 4; }
+.dial .hand.dashed { stroke-dasharray: 4 3; }
+.dial .hub { fill: var(--ink); }
+.dial .empty-label { fill: var(--muted); font: 600 9px var(--sans); text-anchor: middle; letter-spacing: 0.08em; }
+
+/* Legend */
+.legend { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 24px; padding: 16px 20px; border: 1px solid var(--rule); font-size: 0.85rem; color: var(--muted); }
+.legend div { display: flex; align-items: center; gap: 8px; }
+.legend .mark { width: 22px; height: 22px; }
+.legend + .meta-line { margin-top: 12px; }
+
+.error { border: 1px solid var(--accent); padding: 16px 20px; margin: 32px 0; }
+
+/* Explainer pages */
+.prose { max-width: 42em; padding: 40px 0 0; }
+.prose h1 { font: 500 clamp(1.8rem, 4vw, 2.5rem)/1.15 var(--serif); margin: 0 0 20px; }
+.prose h2 { font: 600 1.3rem/1.3 var(--serif); margin: 32px 0 8px; }
+.prose p, .prose li { font-size: 1.02rem; }
+.prose dl { margin: 0; }
+.prose dt { font: 600 1.1rem/1.3 var(--serif); margin-top: 20px; }
+.prose dd { margin: 4px 0 0; }
+.prose dd p { margin: 4px 0; }
+.prose .tag { font-weight: 700; }
+.prose .tag.a { color: var(--accel); }
+.prose .tag.s { color: var(--stable); }
+
+@media (max-width: 760px) {
+  .intro { grid-template-columns: 1fr; padding-top: 28px; gap: 24px; }
+}
+@media (max-width: 400px) {
+  .overall { flex-direction: column; align-items: flex-start; }
+  .reading .dial { width: 80px; }
+}

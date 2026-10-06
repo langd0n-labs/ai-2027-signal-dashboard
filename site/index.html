@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 2027 Signal Dashboard</title>
+  <meta name="description" content="An early-warning dashboard that tracks whether the world is moving toward the AI 2027 scenario, across five signals.">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="dashboard">
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">AI 2027 <span>Signal</span> Dashboard</a>
+      <nav class="site-nav" aria-label="Site">
+      <a href="index.html" aria-current="page">Dashboard</a>
+      <a href="about.html">What is AI 2027?</a>
+      <a href="signals.html">How the signals were chosen</a>
+      <a href="method.html">How classification works</a>
+      </nav>
+    </div>
+  </header>
+  <p id="sample-banner" class="banner" hidden>Sample data — not a real classification yet</p>
+  <main class="wrap">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <h1 id="page-title">Is the world moving toward AI&nbsp;2027?</h1>
+        <p class="lede">Five signals, read once a month. Each one is classified as accelerating toward the <a href="about.html">AI 2027</a> scenario, stabilizing, or unclear, with a short reason and a confidence score.</p>
+        <p id="updated" class="updated">Loading…</p>
+      </div>
+      <div id="overall" class="overall" aria-live="polite"></div>
+    </section>
+
+    <h2 class="section-title">The five signals</h2>
+    <div id="signals" class="grid" aria-live="polite"></div>
+
+    <div class="legend" aria-label="Legend">
+      <div><span class="mark" data-status="accelerating" data-run="scheduled" aria-hidden="true">▲</span> Accelerating</div>
+      <div><span class="mark" data-status="stabilizing" data-run="scheduled" aria-hidden="true">▼</span> Stabilizing</div>
+      <div><span class="mark" data-status="unclear" data-run="scheduled" aria-hidden="true">?</span> Unclear</div>
+      <div><span class="mark none" aria-hidden="true">–</span> No reading</div>
+      <div><span class="mark" data-status="unclear" data-run="scheduled" aria-hidden="true"></span> Solid: monthly run</div>
+      <div><span class="mark" data-status="unclear" data-run="backfill" aria-hidden="true"></span> Dashed: backfilled after the fact</div>
+    </div>
+    <p class="meta-line">Read more: <a href="about.html">what AI 2027 is</a> · <a href="signals.html">how the signals were chosen</a> · <a href="method.html">how the classification works</a>.</p>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>AI-Attribution: AI-G (<a href="https://langd0n.com/ai-attribution">what this means</a>). Source code and data: <a href="https://github.com/langd0n-labs/ai-2027-signal-dashboard">github.com/langd0n-labs/ai-2027-signal-dashboard</a>.</p>
+      <p>Tracks signals related to the <a href="https://ai-2027.com">AI 2027</a> scenario. Not affiliated with the AI Futures Project.</p>
+    </div>
+  </footer>
+</body>
+</html>
