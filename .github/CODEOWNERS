@@ -1,0 +1,5 @@
+# Changes outside data/ are reviewed by a code owner before merge.
+* @langdon
+
+# data/ has no code owner, so the monthly data PRs can merge automatically.
+/data/
