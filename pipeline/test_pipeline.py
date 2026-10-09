@@ -107,6 +107,33 @@ class CheckData(unittest.TestCase):
         self.assertIn("no entries", found)
 
 
+class ExitCodes(unittest.TestCase):
+    def run_with(self, collect, classify=None):
+        import tempfile
+        from pathlib import Path
+
+        import run
+        tmp = Path(tempfile.mkdtemp())
+        saved = run.DATA, run.EVIDENCE, run.collect, run.classify
+        run.DATA, run.EVIDENCE, run.collect = tmp / "signals.json", tmp / "evidence", collect
+        run.classify = classify or (lambda llm, prompt: ({"status": "unclear", "justification": "Mixed.", "confidence": 2}, "m"))
+        try:
+            return run.main(["--period", "2026-04"])
+        finally:
+            run.DATA, run.EVIDENCE, run.collect, run.classify = saved
+
+    def test_one_signal_without_data_is_partial(self):
+        ok = {"source": "FRED", "status": "ok", "lines": ["x"], "links": []}
+        bad = {"source": "GDELT", "status": "failed", "lines": ["x"], "links": []}
+        self.assertEqual(self.run_with(lambda s, p: [bad] if s["id"] == "opinion" else [ok]), 3)
+
+    def test_all_good_is_zero_and_all_failed_is_four(self):
+        ok = {"source": "FRED", "status": "ok", "lines": ["x"], "links": []}
+        bad = {"source": "GDELT", "status": "failed", "lines": ["x"], "links": []}
+        self.assertEqual(self.run_with(lambda s, p: [ok]), 0)
+        self.assertEqual(self.run_with(lambda s, p: [bad]), 4)
+
+
 class Summary(unittest.TestCase):
     def test_no_data_signals_are_not_listed_as_classified(self):
         from run import summary
