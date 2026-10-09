@@ -11,7 +11,7 @@ const STATUS = {
 };
 
 const SVG_NS = "http://www.w3.org/2000/svg";
-const PERIOD_RE = /^(\d{4})-(\d{2})$/;
+const PERIOD_RE = /^(\d{4})-(0[1-9]|1[0-2])$/;
 
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
@@ -119,6 +119,7 @@ function renderOverall(overall) {
   box.replaceChildren();
   const status = overall ? knownStatus(overall.status) : null;
   const body = el("div", {}, el("h2", { text: "Overall" }));
+  delete box.dataset.status;
   if (status) {
     box.dataset.status = status;
     body.append(statusLine(status));
@@ -132,8 +133,13 @@ function renderOverall(overall) {
 
 function renderCard(signal, entries, periods) {
   const byPeriod = new Map(entries.map((e) => [e.period, e]));
-  const latest = entries.length ? entries.reduce((a, b) => (b.period > a.period ? b : a)) : null;
+  const newest = entries.length ? entries.reduce((a, b) => (b.period > a.period ? b : a)) : null;
+  // The card speaks for the newest month on the dashboard. A signal whose newest entry is older than
+  // that has no reading for it, so its last reading must not pass as current.
+  const current = periods[periods.length - 1];
+  const latest = newest && newest.period === current ? newest : null;
   const status = latest ? knownStatus(latest.status) : null;
+  const lastStatus = newest ? knownStatus(newest.status) : null;
   const name = String(signal.name ?? signal.id);
   const runLabel = (e) => (e.run === "scheduled" ? "scheduled" : "backfilled");
 
@@ -142,7 +148,7 @@ function renderCard(signal, entries, periods) {
 
   card.append(el("div", { class: "card-head" },
     el("h3", { id: `sig-${signal.id}`, text: name }),
-    latest ? el("span", { class: "period", text: formatPeriod(latest.period) }) : null));
+    current ? el("span", { class: "period", text: formatPeriod(current) }) : null));
 
   const info = el("div", {}, statusLine(status));
   if (latest) {
@@ -154,7 +160,12 @@ function renderCard(signal, entries, periods) {
   }
   card.append(el("div", { class: "reading" }, dial(status, dialLabel(name, status)), info));
 
-  card.append(el("p", { class: "justification", text: latest ? String(latest.justification ?? "") : "No reading yet for this signal." }));
+  let note = "No reading yet for this signal.";
+  if (latest) note = String(latest.justification ?? "");
+  else if (newest) {
+    note = `No reading for ${formatPeriod(current)}. Last reading, ${formatPeriod(newest.period)}: ${lastStatus ? STATUS[lastStatus].label : "unknown"}.`;
+  }
+  card.append(el("p", { class: "justification", text: note }));
 
   if (periods.length) {
     const strip = el("ol", { class: "strip", "aria-label": `${name} history, oldest to newest` });
