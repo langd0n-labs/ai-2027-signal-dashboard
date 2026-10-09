@@ -1,8 +1,11 @@
 """Collect evidence for one signal and one month from public sources that accept past dates.
 
-Every fetcher returns a dict: {"source", "lines", "links"}. "lines" is plain text for the model,
-"links" is [{"title", "url"}] shown on the site. A failed source returns an "unavailable" line
-instead of raising, so one outage does not stop the run.
+Every fetcher returns a dict: {"source", "status", "lines", "links"}.
+- "status" is "ok" (found something), "empty" (worked, found nothing) or "failed" (could not fetch).
+- "lines" is plain text for the model.
+- "links" is [{"title", "url"}] shown on the site. Links only ever point at the sources' own pages
+  (ALLOWED_HOSTS), never at a URL a third party submitted.
+A failed source returns "failed" instead of raising, so one outage does not stop the run.
 """
 
 import calendar
@@ -18,6 +21,10 @@ from datetime import date
 from functools import lru_cache
 
 USER_AGENT = "ai-2027-signal-dashboard (+https://github.com/langd0n-labs/ai-2027-signal-dashboard)"
+ALLOWED_HOSTS = {
+    "www.federalregister.gov", "fred.stlouisfed.org", "arxiv.org", "epoch.ai",
+    "news.ycombinator.com", "blog.gdeltproject.org",
+}
 
 
 def month_bounds(period):
@@ -51,11 +58,21 @@ def get(url, retries=4, wait=10):
         time.sleep(wait * 2**attempt)
 
 
+def result(source, lines, links, found):
+    return {"source": source, "status": "ok" if found else "empty", "lines": lines, "links": links}
+
+
+def allowed(link):
+    return urllib.parse.urlsplit(link["url"]).hostname in ALLOWED_HOSTS
+
+
 def safe(source, fn, *args):
     try:
-        return fn(*args)
+        out = fn(*args)
     except Exception as e:  # noqa: BLE001 - one source failing must not stop the others
-        return {"source": source, "lines": [f"{source}: unavailable for this period ({type(e).__name__})."], "links": []}
+        return {"source": source, "status": "failed", "lines": [f"{source}: unavailable for this period ({type(e).__name__})."], "links": []}
+    out["links"] = [link for link in out["links"] if allowed(link)]
+    return out
 
 
 @lru_cache(maxsize=None)
@@ -69,14 +86,11 @@ def fred(series, period):
     sid = series["id"]
     obs = [(d, v) for d, v in _fred_rows(sid) if d <= end.isoformat() and v not in ("", ".")][-13:]
     if not obs:
-        return {"source": "FRED", "lines": [f"FRED {sid}: no observations by {end}."], "links": []}
+        return result("FRED", [f"FRED {sid}: no observations by {end}."], [], False)
     series_text = ", ".join(f"{d}: {v}" for d, v in obs)
     url = f"https://fred.stlouisfed.org/series/{sid}"
-    return {
-        "source": "FRED",
-        "lines": [f"FRED {sid}, {series['name']}. Observations by date: {series_text}"],
-        "links": [{"title": f"FRED: {series['name']}", "url": url}],
-    }
+    return result("FRED", [f"FRED {sid}, {series['name']}. Observations by date: {series_text}"],
+                  [{"title": f"FRED: {series['name']}", "url": url}], True)
 
 
 def federal_register(term, period):
@@ -98,28 +112,33 @@ def federal_register(term, period):
     docs = now.get("results", [])
     lines = [f"Federal Register documents matching {term}: {now.get('count', 0)} this month, {before.get('count', 0)} the month before."]
     lines += [f"- [{d.get('type', '')}] {d['title']} ({', '.join(a.get('name', '') for a in d.get('agencies') or [])})" for d in docs]
-    return {"source": "Federal Register", "lines": lines, "links": [{"title": d["title"], "url": d["html_url"]} for d in docs[:3]]}
+    links = [{"title": d["title"], "url": d["html_url"]} for d in docs[:3]]
+    return result("Federal Register", lines, links, bool(docs))
+
+
+HN_MIN_POINTS = 20
 
 
 def hn(query, period):
-    """Most-discussed Hacker News stories for the query this month.
+    """The most relevant Hacker News stories for the query this month with at least HN_MIN_POINTS points.
 
     Headlines only: Algolia's per-month story totals swing by an order of magnitude between months
     (368,063 stories indexed for March 2026, 29,607 for April), so counts are not comparable.
+    Links go to the HN discussion page, never to the URL the submitter posted.
     """
     start, end = month_bounds(period)
     lo = calendar.timegm(start.timetuple())
     hi = calendar.timegm(end.timetuple()) + 86400
-    params = {"query": query, "tags": "story", "hitsPerPage": 6, "numericFilters": f"created_at_i>={lo},created_at_i<{hi}"}
+    params = {"query": query, "tags": "story", "hitsPerPage": 6, "numericFilters": f"created_at_i>={lo},created_at_i<{hi},points>={HN_MIN_POINTS}"}
     hits = json.loads(get("https://hn.algolia.com/api/v1/search?" + urllib.parse.urlencode(params))).get("hits", [])
     hits.sort(key=lambda h: h.get("points") or 0, reverse=True)
-    lines = [f"Most-discussed Hacker News stories matching '{query}' this month (headlines, not a measure of volume):"]
+    lines = [f"Relevant Hacker News stories matching '{query}' this month, {HN_MIN_POINTS}+ points (headlines, not a measure of volume):"]
     links = []
     for h in hits:
-        url = h.get("url") or f"https://news.ycombinator.com/item?id={h['objectID']}"
+        url = f"https://news.ycombinator.com/item?id={h['objectID']}"
         lines.append(f"- {h.get('title')} ({h.get('points') or 0} points, {h.get('created_at', '')[:10]})")
         links.append({"title": h.get("title") or url, "url": url})
-    return {"source": "Hacker News", "lines": lines, "links": links[:2]}
+    return result("Hacker News", lines, links[:2], bool(hits))
 
 
 def arxiv(query, period):
@@ -135,11 +154,9 @@ def arxiv(query, period):
         return int(node.text)
 
     now, before = total(period), total(prev_month(period))
-    return {
-        "source": "arXiv",
-        "lines": [f"arXiv submissions in {query}: {now} this month, {before} the month before."],
-        "links": [{"title": f"arXiv listing: {query}", "url": "https://arxiv.org/list/cs.AI/recent"}],
-    }
+    category = query.removeprefix("cat:")
+    return result("arXiv", [f"arXiv submissions in {query}: {now} this month, {before} the month before."],
+                  [{"title": f"arXiv listing: {category}, {period}", "url": f"https://arxiv.org/list/{category}/{period}"}], now > 0)
 
 
 @lru_cache(maxsize=1)
@@ -162,9 +179,8 @@ def epoch_models(period):
     for r in now[:12]:
         compute = r.get("Training compute (FLOP)") or "unknown"
         lines.append(f"- {r['Model']} ({r.get('Organization', '')}), training compute {compute} FLOP")
-    links = [{"title": f"Epoch AI: {r['Model']}", "url": r["Link"]} for r in now[:2] if (r.get("Link") or "").startswith("http")]
-    links.append({"title": "Epoch AI: Notable AI Models dataset (CC BY 4.0)", "url": "https://epoch.ai/data/notable-ai-models"})
-    return {"source": "Epoch AI", "lines": lines, "links": links}
+    links = [{"title": "Epoch AI: Notable AI Models dataset (CC BY 4.0)", "url": "https://epoch.ai/data/notable-ai-models"}]
+    return result("Epoch AI", lines, links, bool(now))
 
 
 def _month_avg(points, period):
@@ -209,6 +225,7 @@ def gdelt(query, period):
         raise
     return {
         "source": "GDELT",
+        "status": "ok" if tone is not None or vol is not None else "empty",
         "lines": [
             f"GDELT average tone of worldwide news coverage matching {query} (negative is more negative): {_fmt(tone)} this month, {_fmt(tone_before)} the month before.",
             f"GDELT share of all monitored news coverage matching {query} (percent): {_fmt(vol)} this month, {_fmt(vol_before)} the month before.",

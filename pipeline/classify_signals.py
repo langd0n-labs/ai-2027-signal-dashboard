@@ -1,6 +1,7 @@
 """Ask the configured LLM to classify one signal for one month from the collected evidence."""
 
 STATUSES = ("accelerating", "stabilizing", "unclear")
+MAX_JUSTIFICATION = 400  # characters; the prompt asks for at most 300
 
 SCHEMA = {
     "type": "object",
@@ -25,7 +26,8 @@ Rules:
 - Compare this month with the month before and with the longer series where given. A level alone is not a trend.
 - Counts of news stories and documents reflect attention, not outcomes. Weigh them accordingly.
 - Some sources may be marked unavailable. Do not guess what they would have shown.
-- justification: one or two plain sentences a general reader can follow, naming the evidence that decided it.
+- Monthly economic series are published late. The latest observation is often one month before the month being classified, and JOLTS lags two months. Judge the trend from the latest observations available; a missing final month is not evidence.
+- justification: one or two plain sentences, at most 300 characters, that a general reader can follow, naming the evidence that decided it.
 - confidence: 1 (a guess) to 5 (strong, consistent evidence)."""
 
 
@@ -51,6 +53,8 @@ def validate(result):
         raise ValueError(f"bad confidence: {result.get('confidence')!r}")
     if not isinstance(result.get("justification"), str) or not result["justification"].strip():
         raise ValueError("empty justification")
+    if len(result["justification"]) > MAX_JUSTIFICATION:
+        raise ValueError(f"justification longer than {MAX_JUSTIFICATION} characters")
     return {"status": result["status"], "justification": result["justification"].strip(), "confidence": result["confidence"]}
 
 
@@ -68,7 +72,7 @@ def _anthropic(llm, prompt):
 
     response = anthropic.Anthropic().messages.create(
         model=llm["model"],
-        max_tokens=16000,
+        max_tokens=llm["max_tokens"],
         thinking={"type": "adaptive"},
         output_config={"effort": llm["effort"], "format": {"type": "json_schema", "schema": SCHEMA}},
         system=SYSTEM,

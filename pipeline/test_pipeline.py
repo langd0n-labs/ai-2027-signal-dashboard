@@ -2,8 +2,9 @@
 
 import unittest
 
+from check_data import problems
 from classify_signals import validate
-from fetch_sources import _month_avg, month_bounds, prev_month
+from fetch_sources import _month_avg, allowed, month_bounds, prev_month, safe
 from run import last_complete_month, merge, month, months
 
 SIGNALS = [{"id": i, "name": i, "accelerating": "a", "stabilizing": "s"} for i in ("policy", "labor")]
@@ -63,6 +64,55 @@ class Gdelt(unittest.TestCase):
         pts = [{"date": "20260401T000000Z", "value": 1.0}, {"date": "20260402T000000Z", "value": 3.0}, {"date": "20260301T000000Z", "value": 9}]
         self.assertEqual(_month_avg(pts, "2026-04"), 2.0)
         self.assertIsNone(_month_avg(pts, "2026-05"))
+
+
+class Sources(unittest.TestCase):
+    def test_failed_source_is_marked_failed(self):
+        def boom(period):
+            raise TimeoutError
+        self.assertEqual(safe("X", boom, "2026-04")["status"], "failed")
+
+    def test_links_off_the_allowlist_are_dropped(self):
+        out = safe("X", lambda p: {"source": "X", "status": "ok", "lines": [], "links": [
+            {"title": "ok", "url": "https://news.ycombinator.com/item?id=1"},
+            {"title": "bad", "url": "https://evil.example/x"}]}, "2026-04")
+        self.assertEqual([link["title"] for link in out["links"]], ["ok"])
+        self.assertFalse(allowed({"url": "https://fred.stlouisfed.org.evil.example/"}))
+
+
+def good_doc():
+    return {"schema": 1, "sample": False, "period": "month", "signals": [{"id": "policy"}], "entries": [{
+        "signal": "policy", "period": "2026-04", "status": "unclear", "justification": "Mixed.", "confidence": 2,
+        "sources": [{"title": "t", "url": "https://www.federalregister.gov/d/1"}], "provider": "anthropic",
+        "model": "m", "run": "backfill", "classified_at": "2026-10-09T00:00:00Z"}]}
+
+
+class CheckData(unittest.TestCase):
+    def test_good_document_passes(self):
+        self.assertEqual(problems(good_doc()), [])
+
+    def test_catches_bad_data(self):
+        doc = good_doc()
+        doc["entries"][0].update(period="2026-13", status="up", sources=[{"url": "http://evil.example"}])
+        doc["entries"].append(dict(doc["entries"][0]))
+        found = " ".join(problems(doc))
+        for needle in ("bad period", "bad status", "allowed host", "duplicate"):
+            self.assertIn(needle, found)
+
+    def test_total_failure_and_sample_fail(self):
+        doc = good_doc()
+        doc.update(sample=True, entries=[])
+        found = " ".join(problems(doc))
+        self.assertIn("sample", found)
+        self.assertIn("no entries", found)
+
+
+class Summary(unittest.TestCase):
+    def test_no_data_signals_are_not_listed_as_classified(self):
+        from run import summary
+        text = summary(["2026-09"], 0, [], {}, [("2026-09", "policy")])
+        self.assertIn("No reading", text)
+        self.assertNotIn("classified without them", text)
 
 
 if __name__ == "__main__":
