@@ -5,6 +5,8 @@
 provider = "anthropic"
 model = "claude-opus-5"
 effort = "medium"
+# Ceiling per call, including thinking. The answer itself is a short JSON object.
+max_tokens = 4000
 
 # One section per signal. The definitions are drafts for the maintainer to review.
 # "accelerating" means moving toward the AI 2027 scenario.
