@@ -19,7 +19,7 @@ python3 -m http.server -d site 8000                  # preview the site at http:
   | Code | Meaning |
   | --- | --- |
   | 0 | Every signal was classified. |
-  | 3 | Some signals failed to classify; the rest were written. |
+  | 3 | Incomplete: some signals failed to classify or had no source data. The rest were written. |
   | 4 | Nothing was written, because no source returned data. |
   | Anything else | A crash. |
 
@@ -35,7 +35,7 @@ python3 -m http.server -d site 8000                  # preview the site at http:
 4. Turn on auto-merge (squash) and wait for the merge.
 5. Start **Deploy site**. A merge made with `GITHUB_TOKEN` doesn't trigger `pages.yml` on its own.
 
-If some signals failed, the job still publishes the rest, then ends red so someone notices.
+If the update is incomplete (some signals failed or had no source data), the job still publishes the rest, then ends red so someone notices.
 
 **Deploy site** (`.github/workflows/pages.yml`) publishes `site/` to GitHub Pages when `site/` or `data/` changes on `main`, and when it is started by the update workflow.
 
@@ -50,8 +50,13 @@ Every action is pinned to a full commit SHA, and `anthropic` is pinned to an exa
    - require the status check `data-check`.
 3. **Settings → General:** allow auto-merge.
 4. **Settings → Actions → General:** allow GitHub Actions to create pull requests. This setting also lets a workflow approve its own PR, which matters once `main` requires review. Approval of code changes should stay with a person; data PRs need none, because `data/` has no code owner.
-5. **Settings → Pages:** set the source to GitHub Actions.
-6. Optional: the repository variables `SIGNALS_LLM_PROVIDER`, `SIGNALS_LLM_MODEL` or `SIGNALS_LLM_EFFORT` change the LLM without a code change.
+5. **Settings → Actions → General → Workflow permissions:** read-only by default. Each workflow asks for exactly the write permissions it needs.
+6. **Settings → Pages:** set the source to GitHub Actions.
+7. Optional: the repository variables `SIGNALS_LLM_PROVIDER`, `SIGNALS_LLM_MODEL` or `SIGNALS_LLM_EFFORT` change the LLM without a code change.
+
+### Trust boundary
+
+The `signals` environment keeps the Anthropic key on `main`. Repository **write** access is still trusted, though. A writer can push a branch, open a PR that changes only `data/` (which has no code owner, so it needs no review) and post a `data-check` status, and that PR would auto-merge and publish. Grant write access only to people trusted to publish data. Code changes always need code-owner review.
 
 ### The first backfill
 

@@ -4,8 +4,8 @@
     python pipeline/run.py --from 2026-04 --to 2026-09      # a range; months before the last complete month are marked backfill
     python pipeline/run.py --period 2026-09 --dry-run      # print the evidence, call no LLM, write nothing
 
-Exit codes: 0 every signal classified; 3 some signals failed to classify (the rest were written);
-4 nothing was written because no source returned data. Any other non-zero code is a crash.
+Exit codes: 0 every signal classified; 3 incomplete: some signals failed to classify or had no
+source data (the rest were written); 4 nothing was written because no source returned data. Any other non-zero code is a crash.
 If RUN_SUMMARY is set, a Markdown summary of the run (including failed sources) is written there.
 """
 
@@ -164,7 +164,7 @@ def main(argv=None):
         Path(os.environ["RUN_SUMMARY"]).write_text(text + "\n")
     if not new_entries:
         return EXIT_NO_DATA
-    return EXIT_PARTIAL if failed_signals else 0
+    return EXIT_PARTIAL if failed_signals or no_data else 0
 
 
 if __name__ == "__main__":
