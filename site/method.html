@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How classification works · AI 2027 Signal Dashboard</title>
+  <meta name="description" content="How each signal is classified as accelerating, stabilizing, or unclear, and the limits of the method.">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">AI 2027 <span>Signal</span> Dashboard</a>
+      <nav class="site-nav" aria-label="Site">
+      <a href="index.html">Dashboard</a>
+      <a href="about.html">What is AI 2027?</a>
+      <a href="signals.html">How the signals were chosen</a>
+      <a href="method.html" aria-current="page">How classification works</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <article class="prose">
+      <h1>How the classification works</h1>
+      <h2>Once a month</h2>
+      <p>The pipeline runs once a month for the month that just ended. For each signal it gathers evidence from the <a href="signals.html">data sources</a>: economic series, counts of documents and papers, and a sample of news headlines with links.</p>
+      <h2>An AI model reads the evidence</h2>
+      <p>A large language model receives the evidence for one signal and one month, together with that signal’s definitions of accelerating and stabilizing. It returns:</p>
+      <ul>
+        <li>a status: <strong>accelerating</strong>, <strong>stabilizing</strong>, or <strong>unclear</strong>;</li>
+        <li>a justification of one or two sentences;</li>
+        <li>a confidence score from 1 (low) to 5 (high).</li>
+      </ul>
+      <p>The model is told to use only the evidence it is given, not what it knows from elsewhere. The model and provider are set in configuration, and each reading records which model produced it. If no source returns data for a signal in a month, that month shows “no reading” instead of a guess.</p>
+      <h2>Backfilled months</h2>
+      <p>So that the dashboard starts with a trend instead of a single point, the months before launch were classified after the fact, with the same prompt and settings as the monthly run. They are marked as backfilled. Treat them with extra care:</p>
+      <ul>
+        <li>Economic series such as FRED’s are revised after first release, so a backfilled month sees revised numbers, not the numbers people saw at the time.</li>
+        <li>The model may know about events after the month it is classifying, which can colour its reading despite the instruction to use only the evidence.</li>
+      </ul>
+      <h2>The overall dial</h2>
+      <p>How the five signals combine into one overall reading is not decided yet. It will be defined after the signals have produced real data, so the overall dial currently shows no reading.</p>
+      <h2>Limits</h2>
+      <p>An AI model’s judgment can be wrong, and the evidence is a sample, not the whole picture. Every reading links to its sources so that you can check it yourself.</p>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>AI-Attribution: AI-G (<a href="https://langd0n.com/ai-attribution">what this means</a>). Source code and data: <a href="https://github.com/langd0n-labs/ai-2027-signal-dashboard">github.com/langd0n-labs/ai-2027-signal-dashboard</a>.</p>
+      <p>Tracks signals related to the <a href="https://ai-2027.com">AI 2027</a> scenario. Not affiliated with the AI Futures Project.</p>
+    </div>
+  </footer>
+</body>
+</html>
