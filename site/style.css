@@ -80,9 +80,9 @@ a:hover { color: var(--accent); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 20px; }
 
 .card { background: var(--surface); border: 1px solid var(--rule); border-top: 4px solid var(--status, var(--rule)); padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-.card[data-status="accelerating"] { --status: var(--accel); }
-.card[data-status="stabilizing"] { --status: var(--stable); }
-.card[data-status="unclear"] { --status: var(--unclear); }
+:is(.card, .overall)[data-status="accelerating"] { --status: var(--accel); }
+:is(.card, .overall)[data-status="stabilizing"] { --status: var(--stable); }
+:is(.card, .overall)[data-status="unclear"] { --status: var(--unclear); }
 .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .card h3 { font: 600 1.3rem/1.2 var(--serif); margin: 0; }
 .period { font: 0.8rem/1 var(--mono); color: var(--muted); white-space: nowrap; }
