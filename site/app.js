@@ -208,7 +208,6 @@ function renderCard(signal, entries, periods) {
 
 function renderDashboard(data) {
   document.getElementById("sample-banner").hidden = !data.sample;
-  document.getElementById("updated").textContent = data.updated ? `Last updated ${formatDate(data.updated)}` : "Not updated yet";
 
   renderOverall(data.overall ?? null);
 
@@ -216,6 +215,10 @@ function renderDashboard(data) {
   const periods = [...new Set(entries.map((e) => e.period))].sort().slice(-12);
   document.getElementById("signals").replaceChildren(...(data.signals ?? []).map((s) =>
     renderCard(s, entries.filter((e) => e.signal === s.id), periods)));
+
+  // #updated is the page's one status region: set it last, so "Loading…" is replaced only once the
+  // dashboard is on the page, and a screen reader announces that it loaded.
+  document.getElementById("updated").textContent = data.updated ? `Last updated ${formatDate(data.updated)}` : "Not updated yet";
 }
 
 function renderDefinitions(data) {
