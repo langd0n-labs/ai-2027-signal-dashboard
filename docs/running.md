@@ -7,11 +7,12 @@ pip install -r pipeline/requirements.txt
 python pipeline/test_pipeline.py                     # unit tests, no network
 python pipeline/run.py --period 2026-09 --dry-run    # print the evidence; no LLM call, nothing written
 ANTHROPIC_API_KEY=... python pipeline/run.py         # classify the last complete month
+SIGNALS_LLM_PROVIDER=ollama SIGNALS_LLM_MODEL=qwen2.5:7b python pipeline/run.py   # same, with a local model and no key
 python pipeline/check_data.py                        # check data/signals.json against docs/data-format.md
 python3 -m http.server -d site 8000                  # preview the site at http://localhost:8000
 ```
 
-- **Config:** the LLM provider, model, effort and `max_tokens` come from `pipeline/config.toml`. `SIGNALS_LLM_PROVIDER`, `SIGNALS_LLM_MODEL` and `SIGNALS_LLM_EFFORT` override them. Only the `anthropic` provider is implemented.
+- **Config:** the LLM provider, model, effort and `max_tokens` come from `pipeline/config.toml`. `SIGNALS_LLM_PROVIDER`, `SIGNALS_LLM_MODEL` and `SIGNALS_LLM_EFFORT` override them. Two providers are implemented: `anthropic` and `ollama`.
 - **Backfill:** any month before the last complete month is marked `backfill` automatically.
 - **Month cap:** a run covers at most 12 months unless `--force` is passed.
 - **Exit codes:**

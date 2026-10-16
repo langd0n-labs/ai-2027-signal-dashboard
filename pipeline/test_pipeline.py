@@ -87,6 +87,26 @@ def good_doc():
         "model": "m", "run": "backfill", "classified_at": "2026-10-09T00:00:00Z"}]}
 
 
+class Ollama(unittest.TestCase):
+    def test_sends_schema_and_validates_reply(self):
+        import io, json
+        from unittest import mock
+        from classify_signals import SCHEMA, classify
+        sent = {}
+
+        def fake_urlopen(request, timeout):
+            sent.update(json.loads(request.data))
+            reply = {"model": "qwen2.5:7b", "done_reason": "stop",
+                     "message": {"content": json.dumps({"status": "unclear", "justification": "Thin evidence.", "confidence": 2})}}
+            return io.BytesIO(json.dumps(reply).encode())
+
+        llm = {"provider": "ollama", "model": "qwen2.5:7b", "max_tokens": 100}
+        with mock.patch("urllib.request.urlopen", fake_urlopen):
+            result, model = classify(llm, "prompt")
+        self.assertEqual(sent["format"], SCHEMA)
+        self.assertEqual((result["status"], model), ("unclear", "qwen2.5:7b"))
+
+
 class CheckData(unittest.TestCase):
     def test_good_document_passes(self):
         self.assertEqual(problems(good_doc()), [])
