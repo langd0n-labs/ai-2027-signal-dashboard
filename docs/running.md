@@ -12,7 +12,7 @@ python pipeline/check_data.py                        # check data/signals.json a
 python3 -m http.server -d site 8000                  # preview the site at http://localhost:8000
 ```
 
-- **Config:** the LLM provider, model, effort and `max_tokens` come from `pipeline/config.toml`. `SIGNALS_LLM_PROVIDER`, `SIGNALS_LLM_MODEL` and `SIGNALS_LLM_EFFORT` override them. Two providers are implemented: `anthropic` and `ollama`.
+- **Config:** the LLM provider, model, effort and `max_tokens` come from `pipeline/config.toml`. `SIGNALS_LLM_PROVIDER`, `SIGNALS_LLM_MODEL` and `SIGNALS_LLM_EFFORT` override them. Two providers are implemented: `anthropic` and `ollama`. The `ollama` provider needs [Ollama](https://ollama.com) running with the model pulled, and reads `OLLAMA_HOST` (default `localhost:11434`).
 - **Backfill:** any month before the last complete month is marked `backfill` automatically.
 - **Month cap:** a run covers at most 12 months unless `--force` is passed.
 - **Exit codes:**

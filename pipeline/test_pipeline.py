@@ -88,23 +88,37 @@ def good_doc():
 
 
 class Ollama(unittest.TestCase):
-    def test_sends_schema_and_validates_reply(self):
+    def call(self, content, **reply):
         import io, json
         from unittest import mock
-        from classify_signals import SCHEMA, classify
+        from classify_signals import classify
         sent = {}
 
         def fake_urlopen(request, timeout):
             sent.update(json.loads(request.data))
-            reply = {"model": "qwen2.5:7b", "done_reason": "stop",
-                     "message": {"content": json.dumps({"status": "unclear", "justification": "Thin evidence.", "confidence": 2})}}
-            return io.BytesIO(json.dumps(reply).encode())
+            body = {"model": "qwen2.5:7b", "done_reason": "stop", "prompt_eval_count": 1500, "message": {"content": content}}
+            return io.BytesIO(json.dumps({**body, **reply}).encode())
 
-        llm = {"provider": "ollama", "model": "qwen2.5:7b", "max_tokens": 100}
         with mock.patch("urllib.request.urlopen", fake_urlopen):
-            result, model = classify(llm, "prompt")
+            return classify({"provider": "ollama", "model": "qwen2.5:7b", "max_tokens": 100}, "prompt"), sent
+
+    def test_sends_schema_and_validates_reply(self):
+        import json
+        from classify_signals import SCHEMA
+        (result, model), sent = self.call(json.dumps({"status": "unclear", "justification": "Thin evidence.", "confidence": 2}))
         self.assertEqual(sent["format"], SCHEMA)
+        self.assertEqual(sent["options"]["num_predict"], 100)
         self.assertEqual((result["status"], model), ("unclear", "qwen2.5:7b"))
+
+    def test_rejects_bad_replies(self):
+        import json
+        good = json.dumps({"status": "unclear", "justification": "x", "confidence": 2})
+        for content, reply in ((json.dumps({"status": "bogus", "justification": "x", "confidence": 2}), {}),
+                               ("not json", {}),
+                               (good, {"done_reason": "length"}),
+                               (good, {"prompt_eval_count": 8150})):
+            with self.assertRaises((ValueError, RuntimeError)):
+                self.call(content, **reply)
 
 
 class CheckData(unittest.TestCase):
