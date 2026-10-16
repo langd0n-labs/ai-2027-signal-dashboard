@@ -6,6 +6,12 @@ Source scenario: [AI 2027](https://ai-2027.com) by Daniel Kokotajlo, Scott Alexa
 
 ---
 
+## Status
+
+The site is in `site/` and the pipeline in `pipeline/`. See [`docs/running.md`](docs/running.md) to run them, [`docs/sources.md`](docs/sources.md) for the data sources, and [`docs/data-format.md`](docs/data-format.md) for the data file.
+
+---
+
 ## 🌍 Concept Summary
 
 In response to the fictional scenario _AI 2027_, ChatGPT was prompted to generate a set of "signals to watch" across the domains of policy, labor, technology, public opinion, and macroeconomics. These signals form the basis of a public dashboard that visually communicates AI’s trajectory over time — accelerating, stabilizing, or unclear.
