@@ -1,5 +1,5 @@
 name: Request a new signal
-description: Suggest a sixth signal for the dashboard to track.
+description: Suggest a new signal for the dashboard to track.
 title: "Signal: "
 labels: ["signal-request"]
 body:
@@ -7,6 +7,8 @@ body:
     attributes:
       value: |
         Thanks for the suggestion. The maintainers review every request. A good signal has a clear reading in each direction.
+
+        **This issue is public.** Do not paste API keys, passwords or personal data.
   - type: input
     id: signal-name
     attributes:
@@ -30,7 +32,14 @@ body:
     id: sources
     attributes:
       label: Candidate sources
-      description: Public sources that could measure it, ideally able to return data for a past date.
+      description: At least one public source that could measure it, ideally able to return data for a past date.
+    validations:
+      required: true
+  - type: input
+    id: overlap
+    attributes:
+      label: Does it overlap an existing signal?
+      placeholder: e.g. partly Labor market
     validations:
       required: false
   - type: textarea
