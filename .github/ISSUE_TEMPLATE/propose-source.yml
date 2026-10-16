@@ -1,0 +1,73 @@
+name: Propose a data source
+description: Suggest a public data source for one of the dashboard's signals.
+title: "Source: "
+labels: ["source-proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. The maintainers review every proposal. The pipeline runs monthly and backfills past months, so a source must be able to return data for a past date.
+  - type: input
+    id: source-name
+    attributes:
+      label: Source name
+      placeholder: e.g. Bureau of Labor Statistics JOLTS
+    validations:
+      required: true
+  - type: input
+    id: source-url
+    attributes:
+      label: Source URL
+      description: Link to the data or its API documentation.
+      placeholder: https://
+    validations:
+      required: true
+  - type: dropdown
+    id: signals
+    attributes:
+      label: Which signal(s) would it inform?
+      multiple: true
+      options:
+        - Policy
+        - Labor market
+        - Technology
+        - Public opinion
+        - Economy
+        - New signal
+    validations:
+      required: true
+  - type: dropdown
+    id: past-data
+    attributes:
+      label: Can it return data for a past date?
+      description: The pipeline needs this to backfill earlier months.
+      options:
+        - "Yes"
+        - "No"
+        - Unsure
+    validations:
+      required: true
+  - type: dropdown
+    id: access
+    attributes:
+      label: How is it accessed?
+      options:
+        - Free API
+        - API key
+        - Scraping
+    validations:
+      required: true
+  - type: input
+    id: terms-url
+    attributes:
+      label: Terms of use link
+      description: Link to the source's terms of use or license.
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it a good signal?
+    validations:
+      required: true

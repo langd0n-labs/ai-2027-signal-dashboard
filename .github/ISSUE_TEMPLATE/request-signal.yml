@@ -1,0 +1,41 @@
+name: Request a new signal
+description: Suggest a sixth signal for the dashboard to track.
+title: "Signal: "
+labels: ["signal-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. The maintainers review every request. A good signal has a clear reading in each direction.
+  - type: input
+    id: signal-name
+    attributes:
+      label: Proposed signal name
+      placeholder: e.g. Data center energy demand
+    validations:
+      required: true
+  - type: textarea
+    id: accelerating
+    attributes:
+      label: What would "accelerating" toward the AI 2027 scenario look like?
+    validations:
+      required: true
+  - type: textarea
+    id: stabilizing
+    attributes:
+      label: What would "stabilizing" look like?
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Candidate sources
+      description: Public sources that could measure it, ideally able to return data for a past date.
+    validations:
+      required: false
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter?
+    validations:
+      required: true
