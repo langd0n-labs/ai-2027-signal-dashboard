@@ -7,12 +7,10 @@ on:
 
 permissions:
   contents: read
-  statuses: write
 
 jobs:
   data-check:
-    # data PRs from the monthly job already carry the status
-    if: ${{ !startsWith(github.head_ref, 'data/run-') }}
+    # No branch filter: PRs opened by the monthly job never trigger this, and a skipped required check counts as passing.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
