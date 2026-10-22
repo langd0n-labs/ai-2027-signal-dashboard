@@ -38,6 +38,8 @@ python3 -m http.server -d site 8000                  # preview the site at http:
 
 If the update is incomplete (some signals failed or had no source data), the job still publishes the rest, then ends red so someone notices.
 
+**data-check** (`.github/workflows/data-check.yml`) reports the required `data-check` check on every other PR: it runs the tests, and `check_data.py` when the PR changes `data/`.
+
 **Deploy site** (`.github/workflows/pages.yml`) publishes `site/` to GitHub Pages when `site/` or `data/` changes on `main`, and when it is started by the update workflow.
 
 Every action is pinned to a full commit SHA, and `anthropic` is pinned to an exact version. The update job holds the API key and a write token.
