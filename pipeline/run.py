@@ -114,11 +114,12 @@ def main(argv=None):
 
     for period in periods:
         run = "backfill" if period < latest else "scheduled"
-        evidence_out = {}
+        # keep evidence of readings retained from earlier runs; replace a signal's only when it classifies again
+        path = EVIDENCE / f"{period}.json"
+        evidence_out = json.loads(path.read_text()) if path.exists() else {}
         for signal in signals:
             evidence = collect(signal, period)
             prompt = build_prompt(signal, period, evidence)
-            evidence_out[signal["id"]] = prompt
             if args.dry_run:
                 print(prompt, end="\n\n")
                 continue
@@ -135,6 +136,7 @@ def main(argv=None):
                 failed_signals.append((period, signal["id"], f"{type(e).__name__}: {e}"))
                 print(f"{period} {signal['id']}: FAILED {type(e).__name__}: {e}", file=sys.stderr)
                 continue
+            evidence_out[signal["id"]] = prompt
             links = [link for part in evidence for link in part["links"]][:MAX_LINKS]
             new_entries.append({
                 "signal": signal["id"],
@@ -149,7 +151,7 @@ def main(argv=None):
             print(f"{period} {signal['id']}: {result['status']} ({result['confidence']}/5)")
         if not args.dry_run:
             EVIDENCE.mkdir(parents=True, exist_ok=True)
-            (EVIDENCE / f"{period}.json").write_text(json.dumps(evidence_out, indent=2, ensure_ascii=False) + "\n")
+            path.write_text(json.dumps(evidence_out, indent=2, ensure_ascii=False) + "\n")
 
     if args.dry_run:
         return 0

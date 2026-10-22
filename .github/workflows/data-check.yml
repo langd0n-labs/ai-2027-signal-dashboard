@@ -1,0 +1,30 @@
+# Required check for branch protection. The monthly job posts "data-check" itself on its own data PR (a PR opened
+# with GITHUB_TOKEN triggers no workflows); this workflow reports the same context on every other PR.
+name: data-check
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  data-check:
+    # data PRs from the monthly job already carry the status
+    if: ${{ !startsWith(github.head_ref, 'data/run-') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: pip install -r pipeline/requirements.txt
+      - run: python pipeline/test_pipeline.py
+      - name: Check data/ if the PR changes it
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: git diff --quiet "$BASE" HEAD -- data || python pipeline/check_data.py

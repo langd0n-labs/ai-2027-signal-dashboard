@@ -134,6 +134,35 @@ class ExitCodes(unittest.TestCase):
         self.assertEqual(self.run_with(lambda s, p: [bad]), 4)
 
 
+class EvidenceKept(unittest.TestCase):
+    def test_failed_rerun_keeps_old_evidence_and_success_replaces_it(self):
+        import json
+        import tempfile
+        from pathlib import Path
+
+        import run
+        tmp = Path(tempfile.mkdtemp())
+        ok = {"source": "FRED", "status": "ok", "lines": ["new"], "links": []}
+        good = lambda llm, prompt: ({"status": "unclear", "justification": "Mixed.", "confidence": 2}, "m")  # noqa: E731
+
+        def boom(llm, prompt):
+            raise RuntimeError("down")
+
+        saved = run.DATA, run.EVIDENCE, run.collect, run.classify
+        run.DATA, run.EVIDENCE, run.collect = tmp / "signals.json", tmp / "evidence", lambda s, p: [ok]
+        try:
+            run.EVIDENCE.mkdir()
+            (run.EVIDENCE / "2026-04.json").write_text(json.dumps({"policy": "OLD", "labor": "OLD"}))
+            run.classify = boom
+            self.assertEqual(run.main(["--period", "2026-04"]), 4)
+            self.assertEqual(set(json.loads((run.EVIDENCE / "2026-04.json").read_text()).values()), {"OLD"})
+            run.classify = good
+            self.assertEqual(run.main(["--period", "2026-04"]), 0)
+            self.assertNotIn("OLD", json.loads((run.EVIDENCE / "2026-04.json").read_text()).values())
+        finally:
+            run.DATA, run.EVIDENCE, run.collect, run.classify = saved
+
+
 class Summary(unittest.TestCase):
     def test_no_data_signals_are_not_listed_as_classified(self):
         from run import summary
