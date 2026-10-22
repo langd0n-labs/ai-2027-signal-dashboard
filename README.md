@@ -117,6 +117,12 @@ ai-2027-signal-dashboard/
 
 ---
 
+## 💡 Suggest a source or a signal
+
+Readers can propose a data source for an existing signal, or request a new signal, with the [issue forms](https://github.com/langd0n-labs/ai-2027-signal-dashboard/issues/new/choose). A source proposal asks whether the source can return data for a past date, because the pipeline needs that to backfill. The maintainers review every proposal; nothing is added automatically.
+
+---
+
 ## 🗒️ Notes
 
 * The project is built for simplicity, transparency, and portability.
