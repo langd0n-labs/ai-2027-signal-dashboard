@@ -62,6 +62,8 @@ def classify(llm, prompt):
     """Return (validated result, model that served it). Only the providers below are implemented."""
     if llm["provider"] == "anthropic":
         return _anthropic(llm, prompt)
+    if llm["provider"] == "ollama":
+        return _ollama(llm, prompt)
     raise ValueError(f"LLM provider {llm['provider']!r} is not implemented; add a branch in classify_signals.py")
 
 
@@ -84,3 +86,34 @@ def _anthropic(llm, prompt):
         raise RuntimeError("response hit max_tokens")
     text = next(b.text for b in response.content if b.type == "text")
     return validate(json.loads(text)), response.model
+
+
+def _ollama(llm, prompt):
+    """A local model through Ollama (https://ollama.com), for running without an API key. OLLAMA_HOST overrides the address."""
+    import json
+    import os
+    import urllib.error
+    import urllib.request
+
+    host = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
+    if "://" not in host:
+        host = "http://" + host
+    num_ctx = 8192  # Ollama's default window (2048-4096) silently drops the start of a longer prompt, i.e. the instructions
+    body = {
+        "model": llm["model"],
+        "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt}],
+        "format": SCHEMA,  # Ollama constrains the output to this JSON Schema
+        "stream": False,
+        "options": {"temperature": 0, "num_ctx": num_ctx, "num_predict": min(llm["max_tokens"], 1024)},
+    }
+    request = urllib.request.Request(f"{host}/api/chat", json.dumps(body).encode(), {"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(request, timeout=600) as response:
+            reply = json.load(response)
+    except urllib.error.HTTPError as e:  # Ollama's body says why, e.g. "model not found, try pulling it first"
+        raise RuntimeError(f"Ollama HTTP {e.code}: {e.read().decode(errors='replace')[:200]}") from None
+    if reply.get("prompt_eval_count", 0) >= num_ctx - body["options"]["num_predict"]:
+        raise RuntimeError("prompt may have been truncated to fit the context window")
+    if reply.get("done_reason") == "length":
+        raise RuntimeError("response hit max_tokens")
+    return validate(json.loads(reply["message"]["content"])), reply.get("model", llm["model"])
