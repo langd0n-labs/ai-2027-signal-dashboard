@@ -1,0 +1,63 @@
+# Pipeline configuration. The pipeline reads every choice below from this file.
+# Environment variables override the LLM settings: SIGNALS_LLM_PROVIDER, SIGNALS_LLM_MODEL, SIGNALS_LLM_EFFORT.
+
+[llm]
+provider = "anthropic"
+model = "claude-opus-5"
+effort = "medium"
+# Ceiling per call, including thinking. The answer itself is a short JSON object.
+max_tokens = 4000
+
+# One section per signal. The definitions are drafts for the maintainer to review.
+# "accelerating" means moving toward the AI 2027 scenario.
+
+[[signals]]
+id = "policy"
+name = "Policy"
+accelerating = "Policy moves that speed the race or loosen oversight: deregulation, preemption of state AI laws, national-security race framing, public compute buildouts."
+stabilizing = "Binding rules that slow or steer deployment: safety requirements, labor protections, algorithmic-management laws, UBI pilots."
+federal_register = "\"artificial intelligence\""
+hn_queries = ["AI regulation", "AI bill", "AI executive order"]
+
+[[signals]]
+id = "labor"
+name = "Labor market"
+accelerating = "Layoffs attributed to AI rise, unemployment or claims climb, and hiring falls, especially in white-collar and entry-level work."
+stabilizing = "Labor data hold steady or improve, and layoffs are not being attributed to AI."
+fred = [
+  { id = "UNRATE", name = "Unemployment rate (%)" },
+  { id = "ICSA", name = "Initial jobless claims (weekly)" },
+  { id = "JTSLDL", name = "JOLTS layoffs and discharges (thousands)" },
+  { id = "PAYEMS", name = "Nonfarm payroll employment (thousands)" },
+]
+hn_queries = ["AI layoffs", "replaced by AI", "entry-level jobs AI"]
+
+[[signals]]
+id = "technology"
+name = "Technology"
+accelerating = "Frontier capability jumps, especially in autonomous agents and AI doing AI research, faster releases, and more training compute."
+stabilizing = "Benchmarks plateau, releases slow, or compute and energy limits bite."
+epoch_models = true
+arxiv = "cat:cs.AI"
+hn_queries = ["AI model release", "AI agents", "AI benchmark"]
+
+[[signals]]
+id = "opinion"
+name = "Public opinion"
+accelerating = "AI becomes a top public concern: rising coverage, more negative tone, protests, AI as an election issue."
+stabilizing = "Public attention and alarm about AI hold steady or fall."
+gdelt = "\"artificial intelligence\" sourcelang:english"
+hn_queries = ["AI backlash", "AI poll", "AI protest"]
+
+[[signals]]
+id = "economy"
+name = "Economy"
+accelerating = "Productivity outpaces wages, labor's share of income falls, and AI investment surges."
+stabilizing = "Wages keep pace with productivity and labor's share holds."
+fred = [
+  { id = "OPHNFB", name = "Labor productivity, output per hour (index, quarterly)" },
+  { id = "LES1252881600Q", name = "Real median weekly earnings (1982-84 dollars, quarterly)" },
+  { id = "PRS85006173", name = "Labor share of income, nonfarm business (index, quarterly)" },
+  { id = "CES0500000003", name = "Average hourly earnings, private (dollars)" },
+]
+hn_queries = ["AI investment", "AI data center", "AI productivity"]
