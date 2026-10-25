@@ -30,36 +30,31 @@ python3 -m http.server -d site 8000                  # preview the site at http:
 
 **Update signals** (`.github/workflows/update_signals.yml`) runs on the 10th of each month for the month before. It can also be run by hand with a month range. Data is published with no human in the loop:
 
-1. Classify, then check `data/signals.json` with `check_data.py`. A crash or a run with no data stops here, and nothing is published.
-2. Open a data PR. Its description includes the run summary.
-3. Post the required `data-check` commit status. A PR opened with `GITHUB_TOKEN` triggers no other workflows, so the job reports the check itself.
-4. Turn on auto-merge (squash) and wait for the merge.
-5. Start **Deploy site**. A merge made with `GITHUB_TOKEN` doesn't trigger `pages.yml` on its own.
+1. Check the App settings before any classification calls.
+2. Classify, then validate `data/signals.json` with `check_data.py`. A crash or no source data stops publication.
+3. Create a repository-scoped App installation token, push the data branch, and open a PR against `main`.
+4. Enable squash auto-merge. The normal **data-check** workflow validates the PR. The update job waits up to ten minutes for merge.
+5. The App-authenticated merge triggers **Deploy site** through its push to `main`.
 
-If the update is incomplete (some signals failed or had no source data), the job still publishes the rest, then ends red so someone notices.
+If some signals fail or have no source data, the job publishes the remaining results and includes a partial summary. It then ends red. If no files change, it opens no PR.
 
-**data-check** (`.github/workflows/data-check.yml`) reports the required `data-check` check on every other PR: it runs the tests, and `check_data.py` when the PR changes `data/`.
+**data-check** (`.github/workflows/data-check.yml`) runs pipeline tests on every PR, including automated data PRs. It also runs `pipeline/check_data.py` when the PR changes `data/`. Invalid data blocks merge.
 
-**Deploy site** (`.github/workflows/pages.yml`) publishes `site/` to GitHub Pages when `site/` or `data/` changes on `main`, and when it is started by the update workflow.
+**Deploy site** (`.github/workflows/pages.yml`) publishes `site/` when `site/` or `data/` changes on `main`. It also supports manual dispatch.
 
-Every action is pinned to a full commit SHA, and `anthropic` is pinned to an exact version. The update job holds the API key and a write token.
+Every action uses a full commit SHA. The `anthropic` dependency uses an exact version. The built-in `GITHUB_TOKEN` has only `contents: read`.
 
 ### One-time setup (a repository admin)
 
-1. **Environment:** create an environment named `signals`, limited to the `main` branch, and add the secret `ANTHROPIC_API_KEY` to it. A repository-level secret could be read by a workflow on any branch.
-2. **Branch protection on `main`:**
-   - require a pull request;
-   - require review from code owners (CODEOWNERS covers everything except `data/`), with no general approval count;
-   - require the status check `data-check`.
-3. **Settings → General:** allow auto-merge.
-4. **Settings → Actions → General:** allow GitHub Actions to create pull requests. This setting also lets a workflow approve its own PR, which matters once `main` requires review. Approval of code changes should stay with a person; data PRs need none, because `data/` has no code owner.
-5. **Settings → Actions → General → Workflow permissions:** read-only by default. Each workflow asks for exactly the write permissions it needs.
-6. **Settings → Pages:** set the source to GitHub Actions.
-7. Optional: the repository variables `SIGNALS_LLM_PROVIDER`, `SIGNALS_LLM_MODEL` or `SIGNALS_LLM_EFFORT` change the LLM without a code change.
+Follow the [GitHub App setup checklist](github-app-setup.md). It covers the App, the `signals` environment, branch protection, auto-merge, and Pages.
 
 ### Trust boundary
 
-The `signals` environment keeps the Anthropic key on `main`. Repository **write** access is still trusted, though. A writer can push a branch, open a PR that changes only `data/` (which has no code owner, so it needs no review) and post a `data-check` status, and that PR would auto-merge and publish. Grant write access only to people trusted to publish data. Code changes always need code-owner review.
+Restrict the `signals` environment to `main`. Keep `ANTHROPIC_API_KEY`, `SIGNALS_APP_CLIENT_ID`, and `SIGNALS_APP_PRIVATE_KEY` there. The App private key is available only to the configuration preflight and token action. The classifier shell receives no App credential. The token is created after classification and local validation to avoid its one-hour expiry during long runs. Only the publication step receives the token. The token action revokes it after the job.
+
+Protect the App credential and workflow code on `main` with code-owner review. The App has no bypass permission. Data PRs need the required `data-check` from GitHub Actions. The update workflow does not post a substitute success status. Repository writers remain trusted to propose data for publication. Code changes require code-owner review; `data/` has no code owner.
+
+GitHub creates approval-required workflows for PRs opened, synchronized, or reopened with `GITHUB_TOKEN`. App installation tokens avoid that approval requirement. See [GitHub's token documentation](https://docs.github.com/en/actions/concepts/security/github_token).
 
 ### The first backfill
 

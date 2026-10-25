@@ -205,5 +205,43 @@ class Summary(unittest.TestCase):
         self.assertNotIn("classified without them", text)
 
 
+class WorkflowPreflight(unittest.TestCase):
+    """Exercise the workflow preflight shell without GitHub access."""
+
+    @classmethod
+    def setUpClass(cls):
+        from pathlib import Path
+        cls.root = Path(__file__).resolve().parents[1]
+        cls.workflow = (cls.root / ".github/workflows/update_signals.yml").read_text()
+
+    def step(self, name):
+        import re
+        start = self.workflow.index("      - name: " + name + "\n")
+        rest = self.workflow[start:]
+        return re.split(r"(?=^      - (?:name:|uses:))", rest, flags=re.M)[1]
+
+
+    def test_preflight_reports_missing_names_without_values(self):
+        import os
+        import subprocess
+        import textwrap
+        preflight = self.step("Check App configuration")
+        self.assertIn("SIGNALS_APP_CLIENT_ID: ${{ vars.SIGNALS_APP_CLIENT_ID }}", preflight)
+        self.assertIn("SIGNALS_APP_PRIVATE_KEY: ${{ secrets.SIGNALS_APP_PRIVATE_KEY }}", preflight)
+        script = textwrap.dedent(preflight.split("        run: |\n", 1)[1])
+        names = ("SIGNALS_APP_CLIENT_ID", "SIGNALS_APP_PRIVATE_KEY")
+        for client, key in (("", ""), ("client-sentinel", ""), ("", "pem-sentinel"),
+                            ("client-sentinel", "pem-sentinel")):
+            with self.subTest(client=bool(client), key=bool(key)):
+                result = subprocess.run(["bash", "-e", "-o", "pipefail", "-c", script],
+                                        env={**os.environ, **dict(zip(names, (client, key)))},
+                                        capture_output=True, text=True)
+                self.assertEqual(result.returncode, int(not client or not key))
+                output = result.stdout + result.stderr
+                for name, value in zip(names, (client, key)):
+                    self.assertEqual(name in output, not bool(value))
+                self.assertNotIn("client-sentinel", output)
+                self.assertNotIn("pem-sentinel", output)
+
 if __name__ == "__main__":
     unittest.main()
