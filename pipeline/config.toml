@@ -1,5 +1,6 @@
 # Pipeline configuration. The pipeline reads every choice below from this file.
 # Environment variables override the LLM settings: SIGNALS_LLM_PROVIDER, SIGNALS_LLM_MODEL, SIGNALS_LLM_EFFORT.
+# Providers: "anthropic" (needs ANTHROPIC_API_KEY) or "ollama" (a local model, no key; effort is ignored).
 
 [llm]
 provider = "anthropic"
