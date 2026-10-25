@@ -1,5 +1,4 @@
-# Required check for branch protection. The monthly job posts "data-check" itself on its own data PR (a PR opened
-# with GITHUB_TOKEN triggers no workflows); this workflow reports the same context on every other PR.
+# Required GitHub Actions check for every PR, including App-created data PRs.
 name: data-check
 
 on:
@@ -10,7 +9,7 @@ permissions:
 
 jobs:
   data-check:
-    # No branch filter: PRs opened by the monthly job never trigger this, and a skipped required check counts as passing.
+    # Keep this job unconditional: branch protection requires its result on every PR.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
