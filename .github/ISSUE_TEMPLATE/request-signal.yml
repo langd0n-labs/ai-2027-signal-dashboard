@@ -1,0 +1,50 @@
+name: Request a new signal
+description: Suggest a new signal for the dashboard to track.
+title: "Signal: "
+labels: ["signal-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. The maintainers review every request. A good signal has a clear reading in each direction.
+
+        **This issue is public.** Do not paste API keys, passwords or personal data.
+  - type: input
+    id: signal-name
+    attributes:
+      label: Proposed signal name
+      placeholder: e.g. Data center energy demand
+    validations:
+      required: true
+  - type: textarea
+    id: accelerating
+    attributes:
+      label: What would "accelerating" toward the AI 2027 scenario look like?
+    validations:
+      required: true
+  - type: textarea
+    id: stabilizing
+    attributes:
+      label: What would "stabilizing" look like?
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Candidate sources
+      description: At least one public source that could measure it, ideally able to return data for a past date.
+    validations:
+      required: true
+  - type: input
+    id: overlap
+    attributes:
+      label: Does it overlap an existing signal?
+      placeholder: e.g. partly Labor market
+    validations:
+      required: false
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter?
+    validations:
+      required: true

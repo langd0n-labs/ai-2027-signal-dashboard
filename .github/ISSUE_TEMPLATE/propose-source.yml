@@ -1,0 +1,110 @@
+name: Propose a data source
+description: Suggest a public data source for one of the dashboard's signals.
+title: "Source: "
+labels: ["source-proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. The maintainers review every proposal. The pipeline runs monthly and backfills past months, so a source must be able to return data for a past date.
+
+        **This issue is public.** Do not paste API keys, passwords or personal data. Link to a key's sign-up page instead.
+  - type: input
+    id: source-name
+    attributes:
+      label: Source name
+      placeholder: e.g. Bureau of Labor Statistics JOLTS
+    validations:
+      required: true
+  - type: input
+    id: source-url
+    attributes:
+      label: Source URL
+      description: Link to the data or its API documentation.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: series
+    attributes:
+      label: Series, endpoint or query
+      description: Exactly what the pipeline would read, e.g. a FRED series ID, an API endpoint, or a search query.
+      placeholder: e.g. JTSLDL
+    validations:
+      required: true
+  - type: dropdown
+    id: signals
+    attributes:
+      label: Which signal(s) would it inform?
+      multiple: true
+      options:
+        - Policy
+        - Labor market
+        - Technology
+        - Public opinion
+        - Economy
+        - New signal
+    validations:
+      required: true
+  - type: textarea
+    id: reading
+    attributes:
+      label: How would it show accelerating or stabilizing?
+      description: Which direction in this series counts as moving toward the AI 2027 scenario, and which counts as moving away?
+    validations:
+      required: true
+  - type: dropdown
+    id: past-data
+    attributes:
+      label: Can it return data for a past date?
+      description: The pipeline needs this to backfill earlier months.
+      options:
+        - "Yes"
+        - "No"
+        - Unsure
+    validations:
+      required: true
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often is it updated?
+      options:
+        - Monthly or more often
+        - Quarterly
+        - Yearly
+        - Irregularly
+    validations:
+      required: true
+  - type: dropdown
+    id: access
+    attributes:
+      label: How is it accessed?
+      description: Every current source is free and needs no key. Scraping is considered only where the terms allow it.
+      options:
+        - Free, no key
+        - Free key (sign-up)
+        - Paid
+        - No API (download or scrape)
+    validations:
+      required: true
+  - type: input
+    id: terms-url
+    attributes:
+      label: Terms of use link
+      description: Link to the source's terms of use or license.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: License and required attribution
+      placeholder: e.g. CC BY 4.0, credit "Epoch AI"
+    validations:
+      required: false
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it a good signal?
+    validations:
+      required: true
