@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-10-25T07:04:46Z",
+  "updated": "2026-10-25T07:42:12Z",
   "sample": false,
   "period": "month",
   "overall": null,
@@ -39,9 +39,922 @@
   "entries": [
     {
       "signal": "policy",
+      "period": "2026-04",
+      "status": "accelerating",
+      "justification": "Federal Register AI documents rose from 14 to 38, but this is attention; the substantive items are pro-adoption (AI in education priorities, American AI Exports Program). OpenAI backing an Illinois liability-limiting bill also leans toward loosening oversight, though a toy chatbot ban bill offsets it slightly.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Final Priority and Definitions-Secretary's Supplemental Priority and Definitions on Advancing Artificial Intelligence in Education",
+          "url": "https://www.federalregister.gov/documents/2026/04/13/2026-07087/final-priority-and-definitions-secretarys-supplemental-priority-and-definitions-on-advancing"
+        },
+        {
+          "title": "Notice of Public Meetings of the Maryland Advisory Committee to the U.S. Commission on Civil Rights",
+          "url": "https://www.federalregister.gov/documents/2026/04/22/2026-07809/notice-of-public-meetings-of-the-maryland-advisory-committee-to-the-us-commission-on-civil-rights"
+        },
+        {
+          "title": "American AI Exports Program; Call for Proposals for Pre-Set Consortia",
+          "url": "https://www.federalregister.gov/documents/2026/04/10/2026-06952/american-ai-exports-program-call-for-proposals-for-pre-set-consortia"
+        },
+        {
+          "title": "Meta to start capturing employee mouse movements, keystrokes for AI training",
+          "url": "https://news.ycombinator.com/item?id=47851948"
+        },
+        {
+          "title": "Meta to start capturing employee mouse movements, keystrokes for AI training",
+          "url": "https://news.ycombinator.com/item?id=47851242"
+        },
+        {
+          "title": "OpenAI backs Illinois bill that would limit when AI labs can be held liable",
+          "url": "https://news.ycombinator.com/item?id=47717587"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:37:17Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-04",
+      "status": "stabilizing",
+      "justification": "Unemployment held at 4.3% and is below its 4.5% peak in November. Jobless claims fell to 190,000 and payrolls rose to a new high. JOLTS layoffs dropped back to 1,667k after a March spike. Only two modest AI-layoff stories appeared on Hacker News.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Unemployment rate (%)",
+          "url": "https://fred.stlouisfed.org/series/UNRATE"
+        },
+        {
+          "title": "FRED: Initial jobless claims (weekly)",
+          "url": "https://fred.stlouisfed.org/series/ICSA"
+        },
+        {
+          "title": "FRED: JOLTS layoffs and discharges (thousands)",
+          "url": "https://fred.stlouisfed.org/series/JTSLDL"
+        },
+        {
+          "title": "FRED: Nonfarm payroll employment (thousands)",
+          "url": "https://fred.stlouisfed.org/series/PAYEMS"
+        },
+        {
+          "title": "The AI Layoff Trap",
+          "url": "https://news.ycombinator.com/item?id=47748123"
+        },
+        {
+          "title": "The Downgrading of the American Tech Worker",
+          "url": "https://news.ycombinator.com/item?id=47944328"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:37:21Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-04",
+      "status": "accelerating",
+      "justification": "Epoch logged 17 notable models vs 9 the prior month, including GPT-5.5, Claude Opus 4.7, and DeepSeek-V4 with up to ~1e25 FLOP. Release pace clearly rose; arXiv volume was flat and HN items were mostly noise.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "Epoch AI: Notable AI Models dataset (CC BY 4.0)",
+          "url": "https://epoch.ai/data/notable-ai-models"
+        },
+        {
+          "title": "arXiv listing: cs.AI, 2026-04",
+          "url": "https://arxiv.org/list/cs.AI/2026-04"
+        },
+        {
+          "title": "OpenAI says its new model GPT-2 is too dangerous to release (2019)",
+          "url": "https://news.ycombinator.com/item?id=47684326"
+        },
+        {
+          "title": "Show HN: Rocky – Rust SQL engine with branches, replay, column lineage",
+          "url": "https://news.ycombinator.com/item?id=47935246"
+        },
+        {
+          "title": "An AI agent deleted our production database. The agent's confession is below",
+          "url": "https://news.ycombinator.com/item?id=47911524"
+        },
+        {
+          "title": "Exploiting the most prominent AI agent benchmarks",
+          "url": "https://news.ycombinator.com/item?id=47733217"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:37:30Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-04",
+      "status": "accelerating",
+      "justification": "AI's share of English-language news rose from 0.714% to 0.759%, and tone was flat (0.189 vs 0.187). Hacker News headlines about public backlash, such as 'The AI industry is discovering that the public hates it' (279 points), point to growing alarm.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "GDELT DOC 2.0 API",
+          "url": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/"
+        },
+        {
+          "title": "The AI industry is discovering that the public hates it",
+          "url": "https://news.ycombinator.com/item?id=47904568"
+        },
+        {
+          "title": "People Do Not Yearn for Automation",
+          "url": "https://news.ycombinator.com/item?id=47878737"
+        },
+        {
+          "title": "The Zig project's rationale for their anti-AI contribution policy",
+          "url": "https://news.ycombinator.com/item?id=47957294"
+        },
+        {
+          "title": "Our newsroom AI policy",
+          "url": "https://news.ycombinator.com/item?id=47872452"
+        },
+        {
+          "title": "Ask HN: How do solo devs protect their work in the age of vibe coding?",
+          "url": "https://news.ycombinator.com/item?id=47884457"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:38:27Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-04",
+      "status": "accelerating",
+      "justification": "Labor share fell sharply to 93.4 in 2026Q2 from 97.9 in early 2025, while productivity kept rising to 120.0 and real median earnings barely moved (376 to 378). Productivity is outpacing pay; investment headlines are mixed.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Labor productivity, output per hour (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/OPHNFB"
+        },
+        {
+          "title": "FRED: Real median weekly earnings (1982-84 dollars, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/LES1252881600Q"
+        },
+        {
+          "title": "FRED: Labor share of income, nonfarm business (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/PRS85006173"
+        },
+        {
+          "title": "FRED: Average hourly earnings, private (dollars)",
+          "url": "https://fred.stlouisfed.org/series/CES0500000003"
+        },
+        {
+          "title": "AI for American-produced cement and concrete",
+          "url": "https://news.ycombinator.com/item?id=47603737"
+        },
+        {
+          "title": "DataCenter.FM – background noise app featuring the sound of the AI bubble",
+          "url": "https://news.ycombinator.com/item?id=47959513"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:38:32Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-05",
+      "status": "unclear",
+      "justification": "Federal Register volume is flat at 38 and the listed notices are routine (NSF panel renewals, NIST consortium). Hacker News headlines mix a proposed chatbot ID rule with industry-backed AI literacy funding; no clear binding rule or deregulatory move.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "NIST Artificial Intelligence Consortium",
+          "url": "https://www.federalregister.gov/documents/2026/05/29/2026-10779/nist-artificial-intelligence-consortium"
+        },
+        {
+          "title": "AI-Enabled Optimization of Early-Phase Clinical Trials Pilot Program; Request for Information; Extension of Comment Period",
+          "url": "https://www.federalregister.gov/documents/2026/05/28/2026-10602/ai-enabled-optimization-of-early-phase-clinical-trials-pilot-program-request-for-information"
+        },
+        {
+          "title": "Proposal Review Panel for Mathematical Sciences; Committee Renewal",
+          "url": "https://www.federalregister.gov/documents/2026/05/29/2026-10696/proposal-review-panel-for-mathematical-sciences-committee-renewal"
+        },
+        {
+          "title": "Maryland citizens hit with $2B power grid upgrade for out-of-state AI",
+          "url": "https://news.ycombinator.com/item?id=48088151"
+        },
+        {
+          "title": "Ask HN: Is the Job Market Actually Bad?",
+          "url": "https://news.ycombinator.com/item?id=47988268"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:38:36Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-05",
+      "status": "stabilizing",
+      "justification": "Unemployment held at 4.3% for a third month, payrolls rose to 158,861k, and claims stayed low (~210k) despite a late-May uptick to 225k. Meta's 8k layoffs and AI job headlines show attention, but the hard data are steady.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "FRED: Unemployment rate (%)",
+          "url": "https://fred.stlouisfed.org/series/UNRATE"
+        },
+        {
+          "title": "FRED: Initial jobless claims (weekly)",
+          "url": "https://fred.stlouisfed.org/series/ICSA"
+        },
+        {
+          "title": "FRED: JOLTS layoffs and discharges (thousands)",
+          "url": "https://fred.stlouisfed.org/series/JTSLDL"
+        },
+        {
+          "title": "FRED: Nonfarm payroll employment (thousands)",
+          "url": "https://fred.stlouisfed.org/series/PAYEMS"
+        },
+        {
+          "title": "AI isn't paying off in the way companies think according to Gartner study",
+          "url": "https://news.ycombinator.com/item?id=48112799"
+        },
+        {
+          "title": "Ask HN: Are there any serious efforts to organize tech labor now?",
+          "url": "https://news.ycombinator.com/item?id=48207785"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:38:39Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-05",
+      "status": "unclear",
+      "justification": "Epoch notable models fell from 17 to 6, but arXiv cs.AI rose from 5,037 to 7,055 and new releases (Claude Opus 4.8, Gemini 3.5 Flash) appeared. The evidence shows no clear capability jump or plateau, and the compute figures are mostly unknown.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Epoch AI: Notable AI Models dataset (CC BY 4.0)",
+          "url": "https://epoch.ai/data/notable-ai-models"
+        },
+        {
+          "title": "arXiv listing: cs.AI, 2026-05",
+          "url": "https://arxiv.org/list/cs.AI/2026-05"
+        },
+        {
+          "title": "White House Considers Vetting A.I. Models Before They Are Released",
+          "url": "https://news.ycombinator.com/item?id=48013608"
+        },
+        {
+          "title": "Company behind GLiNER model released open source model for running LLM guardrail",
+          "url": "https://news.ycombinator.com/item?id=48112544"
+        },
+        {
+          "title": "Show HN: Continue? Y/N: A 60-second game about AI agent permission fatigue",
+          "url": "https://news.ycombinator.com/item?id=48308376"
+        },
+        {
+          "title": "An AI coding agent, used to write code, needs to reduce your maintenance costs",
+          "url": "https://news.ycombinator.com/item?id=48089289"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:38:52Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-05",
+      "status": "accelerating",
+      "justification": "May Hacker News headlines point to rising backlash: \"An AI Hate Wave Is Here\" (108 pts), \"The AI Backlash Could Get Ugly\", a poll compilation saying America turned against AI, and data-center and power-bill anger. GDELT is unavailable and there is no prior-month comparison.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "An AI Hate Wave Is Here",
+          "url": "https://news.ycombinator.com/item?id=48173318"
+        },
+        {
+          "title": "The AI Backlash Could Get Ugly",
+          "url": "https://news.ycombinator.com/item?id=48122624"
+        },
+        {
+          "title": "An AI Hate Wave Is Here",
+          "url": "https://news.ycombinator.com/item?id=48173318"
+        },
+        {
+          "title": "Ripgrep AI Policy",
+          "url": "https://news.ycombinator.com/item?id=48292718"
+        },
+        {
+          "title": "Maryland citizens hit with $2B power grid upgrade for out-of-state AI",
+          "url": "https://news.ycombinator.com/item?id=48088151"
+        },
+        {
+          "title": "An Engineer's Post Protesting Laptop Surveillance Is Going Viral Inside Meta",
+          "url": "https://news.ycombinator.com/item?id=48141131"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:40:32Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-05",
+      "status": "accelerating",
+      "justification": "Labor share fell sharply to 93.4 in Q2 2026 from 97.9 in early 2025, while productivity kept rising (120.0) and real median earnings stayed nearly flat (376 to 378). Investment evidence is only anecdotal.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Labor productivity, output per hour (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/OPHNFB"
+        },
+        {
+          "title": "FRED: Real median weekly earnings (1982-84 dollars, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/LES1252881600Q"
+        },
+        {
+          "title": "FRED: Labor share of income, nonfarm business (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/PRS85006173"
+        },
+        {
+          "title": "FRED: Average hourly earnings, private (dollars)",
+          "url": "https://fred.stlouisfed.org/series/CES0500000003"
+        },
+        {
+          "title": "Uber president says AI spending is getting 'harder to justify'",
+          "url": "https://news.ycombinator.com/item?id=48277485"
+        },
+        {
+          "title": "Maryland citizens hit with $2B power grid upgrade for out-of-state AI",
+          "url": "https://news.ycombinator.com/item?id=48088151"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:40:35Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-06",
+      "status": "accelerating",
+      "justification": "A presidential order on advancing AI innovation and security was signed, and House lawmakers released a draft bill to bar state AI rules (preemption). Federal Register AI documents fell from 38 to 19, but no binding safety rules appeared.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "Promoting Advanced Artificial Intelligence Innovation and Security",
+          "url": "https://www.federalregister.gov/documents/2026/06/05/2026-11415/promoting-advanced-artificial-intelligence-innovation-and-security"
+        },
+        {
+          "title": "General Services Acquisition Regulation; Acquisition of Information and Communication Technology; Notice of Listening Sessions and Request for Comments",
+          "url": "https://www.federalregister.gov/documents/2026/06/17/2026-12205/general-services-acquisition-regulation-acquisition-of-information-and-communication-technology"
+        },
+        {
+          "title": "Reforming the High-Cost Program for an All-IP Future, Connect America Fund: A National Broadband Plan for Our Future High-Cost Universal Support",
+          "url": "https://www.federalregister.gov/documents/2026/06/05/2026-11353/reforming-the-high-cost-program-for-an-all-ip-future-connect-america-fund-a-national-broadband-plan"
+        },
+        {
+          "title": "Apple decided not to roll out Siri in EU after denied request for exemption",
+          "url": "https://news.ycombinator.com/item?id=48463024"
+        },
+        {
+          "title": "Everyone feared AI taking over; the real danger is AI serving just the few",
+          "url": "https://news.ycombinator.com/item?id=48701615"
+        },
+        {
+          "title": "US House lawmakers release draft bill to prohibit state AI rules",
+          "url": "https://news.ycombinator.com/item?id=48425031"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:40:38Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-06",
+      "status": "stabilizing",
+      "justification": "Unemployment slipped to 4.2% in June from 4.3%, payrolls rose for a third straight month, and claims (~217k) stayed low despite a small early-June bump. JOLTS layoffs are flat, and HN stories show no real AI-layoff signal.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Unemployment rate (%)",
+          "url": "https://fred.stlouisfed.org/series/UNRATE"
+        },
+        {
+          "title": "FRED: Initial jobless claims (weekly)",
+          "url": "https://fred.stlouisfed.org/series/ICSA"
+        },
+        {
+          "title": "FRED: JOLTS layoffs and discharges (thousands)",
+          "url": "https://fred.stlouisfed.org/series/JTSLDL"
+        },
+        {
+          "title": "FRED: Nonfarm payroll employment (thousands)",
+          "url": "https://fred.stlouisfed.org/series/PAYEMS"
+        },
+        {
+          "title": "Launch HN: Transload (YC P26) – Measuring freight items with CCTV",
+          "url": "https://news.ycombinator.com/item?id=48463273"
+        },
+        {
+          "title": "AI Engineers aren't safe from being replaced by AI",
+          "url": "https://news.ycombinator.com/item?id=48380987"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:40:43Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-06",
+      "status": "accelerating",
+      "justification": "Epoch logged 9 notable models versus 6 the prior month, including two new Anthropic models (Mythos 5, Fable 5) and a 1e25 FLOP LongCat-2.0. Agent activity is also prominent, though arXiv cs.AI submissions fell and compute figures are mostly unknown.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "Epoch AI: Notable AI Models dataset (CC BY 4.0)",
+          "url": "https://epoch.ai/data/notable-ai-models"
+        },
+        {
+          "title": "arXiv listing: cs.AI, 2026-06",
+          "url": "https://arxiv.org/list/cs.AI/2026-06"
+        },
+        {
+          "title": "U.S. allows Anthropic to release Mythos AI to ‘trusted’ US organizations",
+          "url": "https://news.ycombinator.com/item?id=48692995"
+        },
+        {
+          "title": "Show HN: Smart model routing directly in Claude, Codex and Cursor",
+          "url": "https://news.ycombinator.com/item?id=48688700"
+        },
+        {
+          "title": "AI agent bankrupted their operator while trying to scan DN42",
+          "url": "https://news.ycombinator.com/item?id=48500012"
+        },
+        {
+          "title": "AI agent runs amok in Fedora and elsewhere",
+          "url": "https://news.ycombinator.com/item?id=48484584"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:40:54Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-06",
+      "status": "unclear",
+      "justification": "GDELT is unavailable and there is no prior-month comparison. Hacker News headlines like \"The AI backlash is only getting started\" and data center opposition hint at backlash, but there are no protest stories and no polling data.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Americans don't know how to fight AI so they're fighting data centers",
+          "url": "https://news.ycombinator.com/item?id=48371592"
+        },
+        {
+          "title": "The AI backlash is only getting started",
+          "url": "https://news.ycombinator.com/item?id=48686219"
+        },
+        {
+          "title": "Police officer investigated for using AI to 'create evidence' in multiple cases",
+          "url": "https://news.ycombinator.com/item?id=48520807"
+        },
+        {
+          "title": "Tidal AI Policy",
+          "url": "https://news.ycombinator.com/item?id=48718840"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:00Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-06",
+      "status": "accelerating",
+      "justification": "Labor share fell sharply to 93.4 in 2026Q2 from 97.9 in 2025Q1, while productivity kept rising (120.0). Real median earnings are only creeping up (378), so productivity is outpacing pay. Investment evidence is thin, only headlines.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Labor productivity, output per hour (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/OPHNFB"
+        },
+        {
+          "title": "FRED: Real median weekly earnings (1982-84 dollars, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/LES1252881600Q"
+        },
+        {
+          "title": "FRED: Labor share of income, nonfarm business (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/PRS85006173"
+        },
+        {
+          "title": "FRED: Average hourly earnings, private (dollars)",
+          "url": "https://fred.stlouisfed.org/series/CES0500000003"
+        },
+        {
+          "title": "If AI data centers are so great, why are they being built in secret?",
+          "url": "https://news.ycombinator.com/item?id=48386529"
+        },
+        {
+          "title": "Amazon investigating engineers who criticized AI data center expansion",
+          "url": "https://news.ycombinator.com/item?id=48590891"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:03Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-07",
+      "status": "unclear",
+      "justification": "Federal Register AI documents doubled (39 vs 19), but the sampled items are mostly routine notices. Mixed signals: a UAE export-favoring rule and a White House shift of research funds toward AI lean accelerating, while an FTC accuracy policy statement is minor.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Proposed Information Collection; ATUS Artificial Intelligence (AI) Questions",
+          "url": "https://www.federalregister.gov/documents/2026/07/10/2026-13928/proposed-information-collection-atus-artificial-intelligence-ai-questions"
+        },
+        {
+          "title": "Policy Statement Concerning the Suppression of Accuracy in Artificial Intelligence Systems",
+          "url": "https://www.federalregister.gov/documents/2026/07/07/2026-13628/policy-statement-concerning-the-suppression-of-accuracy-in-artificial-intelligence-systems"
+        },
+        {
+          "title": "Request for Nominations for Members To Serve on National Institute of Standards and Technology Federal Advisory Committees",
+          "url": "https://www.federalregister.gov/documents/2026/07/20/2026-14585/request-for-nominations-for-members-to-serve-on-national-institute-of-standards-and-technology"
+        },
+        {
+          "title": "Show HN: Running PrismML's Bonsai inside DRAM by breaking DDR4 timing rules",
+          "url": "https://news.ycombinator.com/item?id=49019271"
+        },
+        {
+          "title": "Tell HN: don't trust Bigco AI agents with AI research IP",
+          "url": "https://news.ycombinator.com/item?id=48798385"
+        },
+        {
+          "title": "Al Vigier: Canada's AI strategy shouldn't include secret Palantir bills",
+          "url": "https://news.ycombinator.com/item?id=48799256"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:06Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-07",
+      "status": "stabilizing",
+      "justification": "Unemployment fell to 4.1% in July 2026 from a 4.5% peak in Nov 2025, and weekly jobless claims dropped to about 190-200k. Payrolls are flat to slightly up and JOLTS layoffs are steady, with little AI-layoff news.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Unemployment rate (%)",
+          "url": "https://fred.stlouisfed.org/series/UNRATE"
+        },
+        {
+          "title": "FRED: Initial jobless claims (weekly)",
+          "url": "https://fred.stlouisfed.org/series/ICSA"
+        },
+        {
+          "title": "FRED: JOLTS layoffs and discharges (thousands)",
+          "url": "https://fred.stlouisfed.org/series/JTSLDL"
+        },
+        {
+          "title": "FRED: Nonfarm payroll employment (thousands)",
+          "url": "https://fred.stlouisfed.org/series/PAYEMS"
+        },
+        {
+          "title": "Meta used AI to target workers with medical conditions for layoffs",
+          "url": "https://news.ycombinator.com/item?id=48908065"
+        },
+        {
+          "title": "Show HN: Juggler – an open-source GUI coding agent, by the creator of JUCE",
+          "url": "https://news.ycombinator.com/item?id=48883305"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:09Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-07",
+      "status": "unclear",
+      "justification": "Releases are steady (7 notable models vs 9; Claude Opus 5, Kimi K3 at 2e25 FLOP), but there is no clear capability jump or AI-research automation evidence. Zuckerberg said agent progress is slower than expected, and arXiv cs.AI submissions fell.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Epoch AI: Notable AI Models dataset (CC BY 4.0)",
+          "url": "https://epoch.ai/data/notable-ai-models"
+        },
+        {
+          "title": "arXiv listing: cs.AI, 2026-07",
+          "url": "https://arxiv.org/list/cs.AI/2026-07"
+        },
+        {
+          "title": "Show HN: Distilling DeepSeek into GPT-OSS doesn't transfer censorship. Try it",
+          "url": "https://news.ycombinator.com/item?id=49113599"
+        },
+        {
+          "title": "German AI consortium releases Soofi S, an open 30B model that tops benchmarks",
+          "url": "https://news.ycombinator.com/item?id=48937756"
+        },
+        {
+          "title": "GitLost: We Tricked GitHub's AI Agent into Leaking Private Repos",
+          "url": "https://news.ycombinator.com/item?id=48827858"
+        },
+        {
+          "title": "Jack Dorsey launches Buzz to combine team chat, AI agents and Git hosting",
+          "url": "https://news.ycombinator.com/item?id=48995213"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:18Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-07",
+      "status": "accelerating",
+      "justification": "HN headlines show growing backlash: politicians losing jobs over AI, WSJ on executives fearing for their lives, Meta pulling a feature after backlash. No prior-month or GDELT baseline, so the trend is inferred from headlines only.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "The AI Marketing Backlash: Why 'AI-First' Brands Are Starting to Fall Flat",
+          "url": "https://news.ycombinator.com/item?id=48803711"
+        },
+        {
+          "title": "Meta pulls new AI image feature after days of backlash",
+          "url": "https://news.ycombinator.com/item?id=48867233"
+        },
+        {
+          "title": "GCC steering committee announces AI policy",
+          "url": "https://news.ycombinator.com/item?id=49108685"
+        },
+        {
+          "title": "OpenJDK Interim Policy on Generative AI",
+          "url": "https://news.ycombinator.com/item?id=49109165"
+        },
+        {
+          "title": "Protect your right to run local AI",
+          "url": "https://news.ycombinator.com/item?id=48768951"
+        },
+        {
+          "title": "Cursor 0day: When Full Disclosure Becomes the Only Protection Left",
+          "url": "https://news.ycombinator.com/item?id=48910676"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:22Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-07",
+      "status": "accelerating",
+      "justification": "Labor share fell from 97.9 (2025Q1) to 93.4 (2026Q2) while productivity kept rising, so wages are lagging output. Hourly earnings grew about 3% a year, and real median weekly earnings dipped to 370 in 2026Q3. Investment evidence is thin.",
+      "confidence": 3,
+      "sources": [
+        {
+          "title": "FRED: Labor productivity, output per hour (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/OPHNFB"
+        },
+        {
+          "title": "FRED: Real median weekly earnings (1982-84 dollars, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/LES1252881600Q"
+        },
+        {
+          "title": "FRED: Labor share of income, nonfarm business (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/PRS85006173"
+        },
+        {
+          "title": "FRED: Average hourly earnings, private (dollars)",
+          "url": "https://fred.stlouisfed.org/series/CES0500000003"
+        },
+        {
+          "title": "Most Americans say \"not in my backyard\" to AI data centers",
+          "url": "https://news.ycombinator.com/item?id=49007525"
+        },
+        {
+          "title": "Teacher arrested for clapping in opposition at an AI data center meeting",
+          "url": "https://news.ycombinator.com/item?id=49097990"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:25Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-08",
+      "status": "unclear",
+      "justification": "Federal Register AI documents dipped from 39 to 33, and the listed items are routine advisory notices, not deregulation or binding rules. Hacker News shows only an EU tougher-regulation story and no executive order stories; the 'AI bill' hits are about money.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Request for Information (RFI) on Modernizing the National Vulnerability Database in the Age of Artificial Intelligence",
+          "url": "https://www.federalregister.gov/documents/2026/08/12/2026-16371/request-for-information-rfi-on-modernizing-the-national-vulnerability-database-in-the-age-of"
+        },
+        {
+          "title": "Innovation Advisory Committee",
+          "url": "https://www.federalregister.gov/documents/2026/08/11/2026-16328/innovation-advisory-committee"
+        },
+        {
+          "title": "Notice of Public Meeting of the Maryland Advisory Committee to the U.S. Commission on Civil Rights",
+          "url": "https://www.federalregister.gov/documents/2026/08/18/2026-16772/notice-of-public-meeting-of-the-maryland-advisory-committee-to-the-us-commission-on-civil-rights"
+        },
+        {
+          "title": "On AI regulation and messaging",
+          "url": "https://news.ycombinator.com/item?id=49325789"
+        },
+        {
+          "title": "ChatGPT to face tougher regulation in the EU",
+          "url": "https://news.ycombinator.com/item?id=49510517"
+        },
+        {
+          "title": "Nvidia projects $673B in sales as AI demand widens",
+          "url": "https://news.ycombinator.com/item?id=49466052"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:28Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-08",
+      "status": "stabilizing",
+      "justification": "Unemployment fell to 4.1% from 4.5% in late 2025, jobless claims stayed near 200-212k, JOLTS layoffs dropped to 1,641k, and payrolls rose. Only one entry-level AI story appeared, and no AI layoff headlines.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Unemployment rate (%)",
+          "url": "https://fred.stlouisfed.org/series/UNRATE"
+        },
+        {
+          "title": "FRED: Initial jobless claims (weekly)",
+          "url": "https://fred.stlouisfed.org/series/ICSA"
+        },
+        {
+          "title": "FRED: JOLTS layoffs and discharges (thousands)",
+          "url": "https://fred.stlouisfed.org/series/JTSLDL"
+        },
+        {
+          "title": "FRED: Nonfarm payroll employment (thousands)",
+          "url": "https://fred.stlouisfed.org/series/PAYEMS"
+        },
+        {
+          "title": "Read HN twice a day for the last decade. Here's my list of S-Tier HN links",
+          "url": "https://news.ycombinator.com/item?id=49183198"
+        },
+        {
+          "title": "Show HN: OzBrain, a shared brain for knowledge between agents and your team",
+          "url": "https://news.ycombinator.com/item?id=49394827"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:31Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-08",
+      "status": "unclear",
+      "justification": "Model releases (8 vs 7) and arXiv cs.AI submissions (5107 vs 4577) edged up, but no frontier capability jump, agent or AI-research breakthrough, or compute surge is shown. Most compute figures are unknown and the headlines are mixed.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Epoch AI: Notable AI Models dataset (CC BY 4.0)",
+          "url": "https://epoch.ai/data/notable-ai-models"
+        },
+        {
+          "title": "arXiv listing: cs.AI, 2026-08",
+          "url": "https://arxiv.org/list/cs.AI/2026-08"
+        },
+        {
+          "title": "AMD acquires Taalas to boost inference performance by etching models in silicon",
+          "url": "https://news.ycombinator.com/item?id=49201970"
+        },
+        {
+          "title": "Show HN: Needle2: 14MB agentic LLM for phones, wearables, smart home and robots",
+          "url": "https://news.ycombinator.com/item?id=49246804"
+        },
+        {
+          "title": "Docker Sandboxes – Disposable, isolated sandboxes for AI agents",
+          "url": "https://news.ycombinator.com/item?id=49239751"
+        },
+        {
+          "title": "Humans missed 1 in 3 threats approving AI agent commands across 40k game runs",
+          "url": "https://news.ycombinator.com/item?id=49195468"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:41Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-08",
+      "status": "accelerating",
+      "justification": "Several headlines point to growing backlash: Big Tech scrambling to quell it, Anthropic listing backlash as an IPO risk, youth hostility to AI CEOs, and a guillotine protest at a data center meeting. No prior-month comparison and GDELT is missing.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Anthropic IPO filing will show AI backlash as a risk factor, sources say",
+          "url": "https://news.ycombinator.com/item?id=49401229"
+        },
+        {
+          "title": "Big Tech's Frantic Race to Quell the Growing Backlash to AI",
+          "url": "https://news.ycombinator.com/item?id=49443338"
+        },
+        {
+          "title": "Young People Hate AI CEOs So Passionately That It's Almost Hard to Believe",
+          "url": "https://news.ycombinator.com/item?id=49323932"
+        },
+        {
+          "title": "xAI, SpaceX, and the Race for AI Buildout",
+          "url": "https://news.ycombinator.com/item?id=49201342"
+        },
+        {
+          "title": "Copyright does not protect AI-generated content in EU",
+          "url": "https://news.ycombinator.com/item?id=49382041"
+        },
+        {
+          "title": "Read HN twice a day for the last decade. Here's my list of S-Tier HN links",
+          "url": "https://news.ycombinator.com/item?id=49183198"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:45Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-08",
+      "status": "accelerating",
+      "justification": "Labor share fell from 97.9 (early 2025) to 93.4 (2026 Q2) while productivity kept rising (119.6 to 120.0), so productivity is outpacing pay. Real median earnings are flat at about 376 and fell to 370 in the latest quarter. Data center news is mostly attention.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Labor productivity, output per hour (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/OPHNFB"
+        },
+        {
+          "title": "FRED: Real median weekly earnings (1982-84 dollars, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/LES1252881600Q"
+        },
+        {
+          "title": "FRED: Labor share of income, nonfarm business (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/PRS85006173"
+        },
+        {
+          "title": "FRED: Average hourly earnings, private (dollars)",
+          "url": "https://fred.stlouisfed.org/series/CES0500000003"
+        },
+        {
+          "title": "Launch HN: Stoa Markets (YC S26) – A Marketplace for GPUs and AI Servers",
+          "url": "https://news.ycombinator.com/item?id=49246057"
+        },
+        {
+          "title": "AI Data Centers Are Driving Up Power Bills – This Map Shows Where",
+          "url": "https://news.ycombinator.com/item?id=49172433"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "backfill",
+      "classified_at": "2026-10-25T07:41:48Z"
+    },
+    {
+      "signal": "policy",
       "period": "2026-09",
       "status": "unclear",
-      "justification": "Federal Register items are routine notices (surveys, advisory committees) with no binding rules or deregulation, and counts dipped slightly (29 vs 33). Hacker News shows only proposals like Sanders' bill and Chinese rules, with no US executive order activity.",
+      "justification": "Federal Register hits are mostly routine notices (surveys, advisory committees), with a small dip from 33 to 29. HN headlines are mixed: a Sanders bill and China's rules point toward restriction, while an NSA AI spending story points toward national-security buildout. No binding rule or deregulatory move stands out.",
       "confidence": 2,
       "sources": [
         {
@@ -72,13 +985,13 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:00:21Z"
+      "classified_at": "2026-10-25T07:41:51Z"
     },
     {
       "signal": "labor",
       "period": "2026-09",
       "status": "stabilizing",
-      "justification": "Unemployment is 4.2%, down from 4.5% in late 2025, though up 0.1 from August. Claims stay near 200k, JOLTS layoffs fell to 1,641k, and payrolls keep edging up. AI-layoff headlines are sparse.",
+      "justification": "Unemployment is 4.2%, down from 4.4-4.5% a year earlier, claims are low near 200k, JOLTS layoffs fell to 1,641k, and payrolls keep edging up. Only a couple of AI-layoff headlines appeared, and they reflect attention rather than data.",
       "confidence": 4,
       "sources": [
         {
@@ -109,13 +1022,13 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:00:34Z"
+      "classified_at": "2026-10-25T07:41:54Z"
     },
     {
       "signal": "technology",
       "period": "2026-09",
       "status": "accelerating",
-      "justification": "Epoch logged 19 notable models vs 8 the month before, including many frontier releases (GPT-6.1, Claude Opus 5.5, Gemini 4), and arXiv cs.AI rose to 6012 from 5107. Compute figures are unknown and one HN story mentions OpenAI scrapping a model, so it is not conclusive.",
+      "justification": "Epoch logged 19 notable models vs 8 the month before, including many frontier releases (GPT-6.1, Claude Opus 5.5, Gemini 4) and arXiv cs.AI rose to 6012 from 5107. Compute figures are unknown and one OpenAI release was reportedly scrapped, so it is not conclusive.",
       "confidence": 3,
       "sources": [
         {
@@ -146,13 +1059,13 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:00:57Z"
+      "classified_at": "2026-10-25T07:42:07Z"
     },
     {
       "signal": "opinion",
       "period": "2026-09",
       "status": "unclear",
-      "justification": "GDELT is unavailable and there is no prior-month comparison. Hacker News shows scattered backlash items (a Montreal AI protest, Republican pushback on Flock AI surveillance), but the scores are low and the headlines are mixed and often off-topic.",
+      "justification": "GDELT is unavailable and the Hacker News hits are a few scattered backlash, policy and protest stories (e.g. a Montreal protest, Flock backlash) with no prior-month baseline, so no trend can be judged.",
       "confidence": 2,
       "sources": [
         {
@@ -183,14 +1096,14 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:04:42Z"
+      "classified_at": "2026-10-25T07:42:09Z"
     },
     {
       "signal": "economy",
       "period": "2026-09",
       "status": "accelerating",
-      "justification": "Labor share fell from 97.9 in early 2025 to 93.4 in Q2 2026 while productivity kept rising, and real median earnings dipped to 370 in Q3. Hourly earnings growth is steady, and data center news is skeptical, so the signal is mixed on investment.",
-      "confidence": 3,
+      "justification": "Labor share fell from 97.9 in early 2025 to 93.4 in 2026Q2 while productivity kept rising, and real median weekly earnings dropped to 370 in 2026Q3. Hourly pay growth is steady, and HN data-center skepticism is only weak counter-evidence.",
+      "confidence": 4,
       "sources": [
         {
           "title": "FRED: Labor productivity, output per hour (index, quarterly)",
@@ -220,7 +1133,7 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:04:46Z"
+      "classified_at": "2026-10-25T07:42:12Z"
     }
   ]
 }
