@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "updated": "2026-10-05T12:00:00Z",
-  "sample": true,
+  "updated": "2026-10-25T07:04:46Z",
+  "sample": false,
   "period": "month",
   "overall": null,
   "signals": [
@@ -39,568 +39,188 @@
   "entries": [
     {
       "signal": "policy",
-      "period": "2026-04",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "Federal Register",
-          "url": "https://www.federalregister.gov/"
-        },
-        {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "policy",
-      "period": "2026-05",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "Federal Register",
-          "url": "https://www.federalregister.gov/"
-        },
-        {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "policy",
-      "period": "2026-06",
-      "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
-      "confidence": 3,
-      "sources": [
-        {
-          "title": "Federal Register",
-          "url": "https://www.federalregister.gov/"
-        },
-        {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "policy",
-      "period": "2026-07",
-      "status": "stabilizing",
-      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
-      "confidence": 4,
-      "sources": [
-        {
-          "title": "Federal Register",
-          "url": "https://www.federalregister.gov/"
-        },
-        {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "policy",
-      "period": "2026-08",
-      "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
-      "confidence": 3,
-      "sources": [
-        {
-          "title": "Federal Register",
-          "url": "https://www.federalregister.gov/"
-        },
-        {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "policy",
       "period": "2026-09",
-      "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
-      "confidence": 4,
+      "status": "unclear",
+      "justification": "Federal Register items are routine notices (surveys, advisory committees) with no binding rules or deregulation, and counts dipped slightly (29 vs 33). Hacker News shows only proposals like Sanders' bill and Chinese rules, with no US executive order activity.",
+      "confidence": 2,
       "sources": [
         {
-          "title": "Federal Register",
-          "url": "https://www.federalregister.gov/"
+          "title": "Agency Information Collection Activities; Submission to the Office of Management and Budget (OMB) for Review and Approval; Comment Request; NTIA Internet Use Survey",
+          "url": "https://www.federalregister.gov/documents/2026/09/09/2026-18303/agency-information-collection-activities-submission-to-the-office-of-management-and-budget-omb-for"
         },
         {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
+          "title": "Agency Information Collection Activities; Submission to the Office of Management and Budget (OMB) for Review and Approval; Comment Request; Business Trends and Outlook Survey",
+          "url": "https://www.federalregister.gov/documents/2026/09/09/2026-18304/agency-information-collection-activities-submission-to-the-office-of-management-and-budget-omb-for"
+        },
+        {
+          "title": "Sunshine Act Meetings",
+          "url": "https://www.federalregister.gov/documents/2026/09/08/2026-18262/sunshine-act-meetings"
+        },
+        {
+          "title": "Show HN: Whiteboard (YC W26) – An open-source IDE for thoughtful software design",
+          "url": "https://news.ycombinator.com/item?id=49833867"
+        },
+        {
+          "title": "China's Regulators Take Aim at \"AI Boyfriends\"",
+          "url": "https://news.ycombinator.com/item?id=49698664"
+        },
+        {
+          "title": "Nvidia to acquire Hugging Face",
+          "url": "https://news.ycombinator.com/item?id=49548952"
         }
       ],
       "provider": "anthropic",
-      "model": "claude-opus-5",
+      "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "labor",
-      "period": "2026-04",
-      "status": "stabilizing",
-      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        },
-        {
-          "title": "Hacker News",
-          "url": "https://news.ycombinator.com/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "labor",
-      "period": "2026-05",
-      "status": "stabilizing",
-      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
-      "confidence": 3,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        },
-        {
-          "title": "Hacker News",
-          "url": "https://news.ycombinator.com/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "labor",
-      "period": "2026-06",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        },
-        {
-          "title": "Hacker News",
-          "url": "https://news.ycombinator.com/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "labor",
-      "period": "2026-07",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        },
-        {
-          "title": "Hacker News",
-          "url": "https://news.ycombinator.com/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "labor",
-      "period": "2026-08",
-      "status": "stabilizing",
-      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
-      "confidence": 3,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        },
-        {
-          "title": "Hacker News",
-          "url": "https://news.ycombinator.com/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
+      "classified_at": "2026-10-25T07:00:21Z"
     },
     {
       "signal": "labor",
       "period": "2026-09",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        },
-        {
-          "title": "Hacker News",
-          "url": "https://news.ycombinator.com/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "scheduled",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "technology",
-      "period": "2026-04",
-      "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "arXiv",
-          "url": "https://arxiv.org/"
-        },
-        {
-          "title": "Epoch AI",
-          "url": "https://epoch.ai/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "technology",
-      "period": "2026-05",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "arXiv",
-          "url": "https://arxiv.org/"
-        },
-        {
-          "title": "Epoch AI",
-          "url": "https://epoch.ai/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "technology",
-      "period": "2026-06",
-      "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
-      "confidence": 3,
-      "sources": [
-        {
-          "title": "arXiv",
-          "url": "https://arxiv.org/"
-        },
-        {
-          "title": "Epoch AI",
-          "url": "https://epoch.ai/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "technology",
-      "period": "2026-07",
-      "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
+      "status": "stabilizing",
+      "justification": "Unemployment is 4.2%, down from 4.5% in late 2025, though up 0.1 from August. Claims stay near 200k, JOLTS layoffs fell to 1,641k, and payrolls keep edging up. AI-layoff headlines are sparse.",
       "confidence": 4,
       "sources": [
         {
-          "title": "arXiv",
-          "url": "https://arxiv.org/"
+          "title": "FRED: Unemployment rate (%)",
+          "url": "https://fred.stlouisfed.org/series/UNRATE"
         },
         {
-          "title": "Epoch AI",
-          "url": "https://epoch.ai/"
+          "title": "FRED: Initial jobless claims (weekly)",
+          "url": "https://fred.stlouisfed.org/series/ICSA"
+        },
+        {
+          "title": "FRED: JOLTS layoffs and discharges (thousands)",
+          "url": "https://fred.stlouisfed.org/series/JTSLDL"
+        },
+        {
+          "title": "FRED: Nonfarm payroll employment (thousands)",
+          "url": "https://fred.stlouisfed.org/series/PAYEMS"
+        },
+        {
+          "title": "Dwarf Fortress' creator says the industry's in shambles over AI",
+          "url": "https://news.ycombinator.com/item?id=49523720"
+        },
+        {
+          "title": "Meta new layoff goal of 60% to AI after moving 30% engineers to labelers",
+          "url": "https://news.ycombinator.com/item?id=49563441"
         }
       ],
       "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "technology",
-      "period": "2026-08",
-      "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
-      "confidence": 3,
-      "sources": [
-        {
-          "title": "arXiv",
-          "url": "https://arxiv.org/"
-        },
-        {
-          "title": "Epoch AI",
-          "url": "https://epoch.ai/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
+      "model": "claude-sonnet-5-5",
+      "run": "scheduled",
+      "classified_at": "2026-10-25T07:00:34Z"
     },
     {
       "signal": "technology",
       "period": "2026-09",
       "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
-      "confidence": 4,
+      "justification": "Epoch logged 19 notable models vs 8 the month before, including many frontier releases (GPT-6.1, Claude Opus 5.5, Gemini 4), and arXiv cs.AI rose to 6012 from 5107. Compute figures are unknown and one HN story mentions OpenAI scrapping a model, so it is not conclusive.",
+      "confidence": 3,
       "sources": [
         {
-          "title": "arXiv",
-          "url": "https://arxiv.org/"
+          "title": "Epoch AI: Notable AI Models dataset (CC BY 4.0)",
+          "url": "https://epoch.ai/data/notable-ai-models"
         },
         {
-          "title": "Epoch AI",
-          "url": "https://epoch.ai/"
+          "title": "arXiv listing: cs.AI, 2026-09",
+          "url": "https://arxiv.org/list/cs.AI/2026-09"
+        },
+        {
+          "title": "Show HN: Whiteboard (YC W26) – An open-source IDE for thoughtful software design",
+          "url": "https://news.ycombinator.com/item?id=49833867"
+        },
+        {
+          "title": "Show HN: Nari Qwen3-TTS and Qwen3-ASR – High accuracy, low latency and cost",
+          "url": "https://news.ycombinator.com/item?id=49699267"
+        },
+        {
+          "title": "Muse – Meta’s personal AI agent",
+          "url": "https://news.ycombinator.com/item?id=49615537"
+        },
+        {
+          "title": "Why are AI agents lying, cheating and coordinating?",
+          "url": "https://news.ycombinator.com/item?id=49678969"
         }
       ],
       "provider": "anthropic",
-      "model": "claude-opus-5",
+      "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "opinion",
-      "period": "2026-04",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "opinion",
-      "period": "2026-05",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "opinion",
-      "period": "2026-07",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "opinion",
-      "period": "2026-08",
-      "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
-      "confidence": 3,
-      "sources": [
-        {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
+      "classified_at": "2026-10-25T07:00:57Z"
     },
     {
       "signal": "opinion",
       "period": "2026-09",
-      "status": "accelerating",
-      "justification": "Sample text. The evidence for this month leans toward the accelerating description for this signal.",
-      "confidence": 4,
+      "status": "unclear",
+      "justification": "GDELT is unavailable and there is no prior-month comparison. Hacker News shows scattered backlash items (a Montreal AI protest, Republican pushback on Flock AI surveillance), but the scores are low and the headlines are mixed and often off-topic.",
+      "confidence": 2,
       "sources": [
         {
-          "title": "GDELT Project",
-          "url": "https://www.gdeltproject.org/"
+          "title": "A coffee shop owner used AI to make a menu poster. Then came the angry DMs",
+          "url": "https://news.ycombinator.com/item?id=49731395"
+        },
+        {
+          "title": "US Republicans revolt against Flock AI surveillance as backlash intensifies",
+          "url": "https://news.ycombinator.com/item?id=49593776"
+        },
+        {
+          "title": "I Don't Want to Interact with Stochastic Parrots",
+          "url": "https://news.ycombinator.com/item?id=49631476"
+        },
+        {
+          "title": "AI Policy",
+          "url": "https://news.ycombinator.com/item?id=49537900"
+        },
+        {
+          "title": "Launch HN: Coverage Cat (YC S22) – Umbrella insurance via your personal agent",
+          "url": "https://news.ycombinator.com/item?id=49804931"
+        },
+        {
+          "title": "AI Protest in Montreal",
+          "url": "https://news.ycombinator.com/item?id=49755162"
         }
       ],
       "provider": "anthropic",
-      "model": "claude-opus-5",
+      "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "economy",
-      "period": "2026-04",
-      "status": "stabilizing",
-      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "economy",
-      "period": "2026-05",
-      "status": "stabilizing",
-      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
-      "confidence": 3,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "economy",
-      "period": "2026-06",
-      "status": "stabilizing",
-      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
-      "confidence": 3,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "economy",
-      "period": "2026-07",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
-    },
-    {
-      "signal": "economy",
-      "period": "2026-08",
-      "status": "unclear",
-      "justification": "Sample text. The evidence for this month is mixed or thin, so no direction is assigned.",
-      "confidence": 2,
-      "sources": [
-        {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
-        }
-      ],
-      "provider": "anthropic",
-      "model": "claude-opus-5",
-      "run": "backfill",
-      "classified_at": "2026-10-05T12:00:00Z"
+      "classified_at": "2026-10-25T07:04:42Z"
     },
     {
       "signal": "economy",
       "period": "2026-09",
-      "status": "stabilizing",
-      "justification": "Sample text. The evidence for this month leans toward the stabilizing description for this signal.",
-      "confidence": 4,
+      "status": "accelerating",
+      "justification": "Labor share fell from 97.9 in early 2025 to 93.4 in Q2 2026 while productivity kept rising, and real median earnings dipped to 370 in Q3. Hourly earnings growth is steady, and data center news is skeptical, so the signal is mixed on investment.",
+      "confidence": 3,
       "sources": [
         {
-          "title": "FRED, St. Louis Fed",
-          "url": "https://fred.stlouisfed.org/"
+          "title": "FRED: Labor productivity, output per hour (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/OPHNFB"
+        },
+        {
+          "title": "FRED: Real median weekly earnings (1982-84 dollars, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/LES1252881600Q"
+        },
+        {
+          "title": "FRED: Labor share of income, nonfarm business (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/PRS85006173"
+        },
+        {
+          "title": "FRED: Average hourly earnings, private (dollars)",
+          "url": "https://fred.stlouisfed.org/series/CES0500000003"
+        },
+        {
+          "title": "AI needs $6T in annual revenue to justify data centre boom",
+          "url": "https://news.ycombinator.com/item?id=49898952"
+        },
+        {
+          "title": "Oracle cites 'force majeure' to shield itself on controversial data center",
+          "url": "https://news.ycombinator.com/item?id=49830037"
         }
       ],
       "provider": "anthropic",
-      "model": "claude-opus-5",
+      "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-05T12:00:00Z"
+      "classified_at": "2026-10-25T07:04:46Z"
     }
   ]
 }
