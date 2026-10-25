@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-10-25T07:42:12Z",
+  "updated": "2026-10-25T09:18:12Z",
   "sample": false,
   "period": "month",
   "overall": null,
@@ -954,7 +954,7 @@
       "signal": "policy",
       "period": "2026-09",
       "status": "unclear",
-      "justification": "Federal Register hits are mostly routine notices (surveys, advisory committees), with a small dip from 33 to 29. HN headlines are mixed: a Sanders bill and China's rules point toward restriction, while an NSA AI spending story points toward national-security buildout. No binding rule or deregulatory move stands out.",
+      "justification": "Federal Register hits are routine notices (29 vs 33), with no binding rules or deregulatory orders. Hacker News shows mixed items: a Sanders bill and China's rules point toward stabilizing, an NSA AI spending story points the other way, and no executive order stories appear.",
       "confidence": 2,
       "sources": [
         {
@@ -985,13 +985,13 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:41:51Z"
+      "classified_at": "2026-10-25T09:16:13Z"
     },
     {
       "signal": "labor",
       "period": "2026-09",
       "status": "stabilizing",
-      "justification": "Unemployment is 4.2%, down from 4.4-4.5% a year earlier, claims are low near 200k, JOLTS layoffs fell to 1,641k, and payrolls keep edging up. Only a couple of AI-layoff headlines appeared, and they reflect attention rather than data.",
+      "justification": "Unemployment fell from 4.5% in late 2025 to 4.1-4.2% and claims stayed near 200k. JOLTS layoffs eased to 1,641k and payrolls kept rising. Only a couple of AI layoff headlines appeared, and they reflect attention rather than outcomes.",
       "confidence": 4,
       "sources": [
         {
@@ -1022,13 +1022,13 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:41:54Z"
+      "classified_at": "2026-10-25T09:16:17Z"
     },
     {
       "signal": "technology",
       "period": "2026-09",
       "status": "accelerating",
-      "justification": "Epoch logged 19 notable models vs 8 the month before, including many frontier releases (GPT-6.1, Claude Opus 5.5, Gemini 4) and arXiv cs.AI rose to 6012 from 5107. Compute figures are unknown and one OpenAI release was reportedly scrapped, so it is not conclusive.",
+      "justification": "Epoch logged 19 notable models vs 8 the prior month, including several flagship frontier releases (GPT-6.1, Claude Opus 5.5, Gemini 4), and arXiv cs.AI rose to 6012 from 5107. Compute data is unknown and one OpenAI model was scrapped over safety, so it is not conclusive.",
       "confidence": 3,
       "sources": [
         {
@@ -1059,13 +1059,13 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:42:07Z"
+      "classified_at": "2026-10-25T09:16:26Z"
     },
     {
       "signal": "opinion",
       "period": "2026-09",
       "status": "unclear",
-      "justification": "GDELT is unavailable and the Hacker News hits are a few scattered backlash, policy and protest stories (e.g. a Montreal protest, Flock backlash) with no prior-month baseline, so no trend can be judged.",
+      "justification": "GDELT is unavailable and there is no prior-month comparison. Hacker News headlines show some backlash items (a Montreal AI protest, Republican pushback on Flock surveillance), but with low point counts and no sign of a shift in volume.",
       "confidence": 2,
       "sources": [
         {
@@ -1096,14 +1096,14 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:42:09Z"
+      "classified_at": "2026-10-25T09:18:08Z"
     },
     {
       "signal": "economy",
       "period": "2026-09",
       "status": "accelerating",
-      "justification": "Labor share fell from 97.9 in early 2025 to 93.4 in 2026Q2 while productivity kept rising, and real median weekly earnings dropped to 370 in 2026Q3. Hourly pay growth is steady, and HN data-center skepticism is only weak counter-evidence.",
-      "confidence": 4,
+      "justification": "Labor share fell from 97.9 (early 2025) to 93.4 (Q2 2026) while productivity kept rising, and real median weekly earnings slipped to 370 in Q3 2026. Hourly earnings growth is steady, and data-center news shows skepticism but little hard investment data.",
+      "confidence": 3,
       "sources": [
         {
           "title": "FRED: Labor productivity, output per hour (index, quarterly)",
@@ -1133,7 +1133,7 @@
       "provider": "anthropic",
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
-      "classified_at": "2026-10-25T07:42:12Z"
+      "classified_at": "2026-10-25T09:18:12Z"
     }
   ]
 }
