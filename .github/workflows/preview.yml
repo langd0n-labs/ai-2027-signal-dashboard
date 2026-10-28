@@ -1,0 +1,35 @@
+# Publishes each PR's site to pr-preview/pr-<N>/ on the gh-pages branch and comments the URL on the PR.
+# Removes the preview when the PR closes. Uses no environment and no secrets.
+name: Preview site
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+    paths: ["site/**", "data/signals.json", ".github/workflows/preview.yml"]
+
+permissions:
+  contents: write # push to gh-pages
+  pull-requests: write # preview comment
+
+concurrency: preview-${{ github.ref }}
+
+jobs:
+  preview:
+    # Fork PRs get a read-only token and cannot push to gh-pages.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Same build as pages.yml: no data/evidence/.
+      - name: Build
+        if: github.event.action != 'closed'
+        run: |
+          cp -R site _site
+          rm _site/data && mkdir _site/data && cp data/signals.json _site/data/
+      - uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+        with:
+          source-dir: _site
+          pages-base-url: ai-signals.langd0n.com
+          qr-code: false
