@@ -216,9 +216,17 @@ function renderDashboard(data) {
   document.getElementById("signals").replaceChildren(...(data.signals ?? []).map((s) =>
     renderCard(s, entries.filter((e) => e.signal === s.id), periods)));
 
+  // The month assessed comes from the entries, not from `updated`, which is when the file was generated:
+  // September readings generated in October must not read as October. Newest period wins, so a backfill
+  // of older months never moves it back.
+  const current = periods[periods.length - 1];
+  document.getElementById("reading-month").textContent = current ? `${formatPeriod(current)} readings` : "No readings yet";
+
   // #updated is the page's one status region: set it last, so "Loading…" is replaced only once the
   // dashboard is on the page, and a screen reader announces that it loaded.
-  document.getElementById("updated").textContent = data.updated ? `Last updated ${formatDate(data.updated)}` : "Not updated yet";
+  const kind = !entries.length ? "No data" : data.sample ? "Sample data" : "Real data";
+  const generated = data.updated ? `Generated ${formatDate(data.updated)}` : "Not generated yet";
+  document.getElementById("updated").textContent = `${kind} · ${generated}`;
 }
 
 function renderDefinitions(data) {
