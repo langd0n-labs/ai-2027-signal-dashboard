@@ -29,7 +29,7 @@ A `langd0n-labs` organization owner and repository admin must complete this chec
 8. Keep the App off all bypass lists. Require code-owner review for workflow and code changes on `main`.
 9. Under **Settings → General → Pull Requests**, enable auto-merge and squash merging.
 10. Under **Settings → Actions → General → Workflow permissions**, select read-only permissions. The App does not need the setting that lets `GITHUB_TOKEN` create or approve PRs.
-11. Under **Settings → Pages**, set **Source** to **GitHub Actions**.
+11. Under **Settings → Pages**, set **Source** to **Deploy from a branch**, branch `gh-pages`, folder `/ (root)`. Run **Deploy site** first so the branch has the site at its root. Keep the custom domain `ai-signals.langd0n.com` (`site/CNAME` publishes it to the branch) and **Enforce HTTPS**. Under **Settings → Environments → github-pages → Deployment branches and tags**, add `gh-pages`; GitHub's Pages build deploys from that branch, and the environment otherwise allows only `main`.
 
 The update job checks that both App settings are present before classification. Authentication happens after classification and local validation. An incorrect Client ID, key, installation, or permission can therefore fail publication after LLM calls have completed. The token covers only this repository, with Contents and Pull requests write permissions. The action revokes the token after the job.
 
