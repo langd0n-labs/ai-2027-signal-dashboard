@@ -85,6 +85,7 @@ a:hover { color: var(--accent); }
 :is(.card, .overall)[data-status="accelerating"] { --status: var(--accel); }
 :is(.card, .overall)[data-status="stabilizing"] { --status: var(--stable); }
 :is(.card, .overall)[data-status="unclear"] { --status: var(--unclear); }
+:is(.card, .overall)[data-status="no_change"] { --status: var(--unclear); }
 .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .card h3 { font: 600 1.3rem/1.2 var(--serif); margin: 0; }
 .period { font: 0.8rem/1 var(--mono); color: var(--muted); white-space: nowrap; }
@@ -103,6 +104,7 @@ a:hover { color: var(--accent); }
 .mark[data-status="accelerating"] { --c: var(--accel); }
 .mark[data-status="stabilizing"] { --c: var(--stable); }
 .mark[data-status="unclear"] { --c: var(--unclear); }
+.mark[data-status="no_change"] { --c: var(--unclear); }
 .mark[data-run="scheduled"] { background: var(--c); color: var(--surface); }
 .mark[data-run="backfill"] { border-style: dashed; }
 .mark.none { border-style: dotted; color: var(--muted); }

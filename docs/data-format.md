@@ -38,7 +38,7 @@ The pipeline writes this file and the site reads it. Change the format only in a
 | `overall` | The overall reading. `null` until its definition is decided. |
 | `signals` | The signals and their definitions, copied from `pipeline/config.toml` on every run. |
 | `entries[].period` | The month classified, `YYYY-MM`. A signal can have no entry for a month: the site shows "no reading". |
-| `entries[].status` | `accelerating`, `stabilizing` or `unclear`. |
+| `entries[].status` | `accelerating` or `stabilizing` (specific evidence in that direction), `unclear` (mixed or thin evidence), or `no_change` (the sources worked and found nothing notable). A month with no entry is "no reading": every source failed. |
 | `entries[].confidence` | 1 (a guess) to 5 (strong, consistent evidence). |
 | `entries[].sources` | Links to the evidence the model saw, chosen by the pipeline, not by the model. |
 | `entries[].provider`, `model` | Which LLM classified the entry. `model` is the model that served the request. |

@@ -1,6 +1,6 @@
 """Ask the configured LLM to classify one signal for one month from the collected evidence."""
 
-STATUSES = ("accelerating", "stabilizing", "unclear")
+STATUSES = ("accelerating", "stabilizing", "unclear", "no_change")
 MAX_JUSTIFICATION = 400  # characters; the prompt asks for at most 300
 
 SCHEMA = {
@@ -17,9 +17,10 @@ SCHEMA = {
 SYSTEM = """You are a signal analyst for a public dashboard that tracks whether the world is moving toward the "AI 2027" scenario (Kokotajlo et al., AI Futures Project, 2025).
 
 You classify one signal for one calendar month:
-- "accelerating": the evidence shows movement toward the scenario, as defined for this signal.
-- "stabilizing": the evidence shows movement away from it, or a steady state.
-- "unclear": the evidence is mixed, thin, or missing.
+- "accelerating": specific evidence shows movement toward the scenario, as defined for this signal.
+- "stabilizing": specific evidence shows movement away from it, as defined for this signal. Stabilizing needs evidence just as accelerating does; it is not the default for a quiet month.
+- "unclear": the evidence is mixed or thin.
+- "no_change": the sources worked and found nothing notable this month, in either direction.
 
 Rules:
 - Use only the evidence provided. Do not use anything you know about events after the end of the month being classified.
@@ -40,6 +41,12 @@ def build_prompt(signal, period, evidence):
         "",
         "Evidence:",
     ]
+    # Tell the model which sources worked and found nothing, apart from those that failed.
+    by_status = {s: {part["source"] for part in evidence if part["status"] == s} for s in ("ok", "empty", "failed")}
+    if by_status["empty"] - by_status["ok"]:
+        lines.insert(-1, f"Sources that worked but found nothing: {', '.join(sorted(by_status['empty'] - by_status['ok']))}.")
+    if by_status["failed"]:
+        lines.insert(-1, f"Sources unavailable: {', '.join(sorted(by_status['failed']))}.")
     for part in evidence:
         lines += part["lines"]
     return "\n".join(lines)
