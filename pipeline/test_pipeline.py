@@ -3,7 +3,7 @@
 import unittest
 
 from check_data import problems
-from classify_signals import validate
+from classify_signals import build_prompt, validate
 from fetch_sources import _month_avg, allowed, month_bounds, prev_month, safe
 from run import last_complete_month, merge, month, months
 
@@ -80,6 +80,18 @@ class Sources(unittest.TestCase):
         self.assertFalse(allowed({"url": "https://fred.stlouisfed.org.evil.example/"}))
 
 
+class Prompt(unittest.TestCase):
+    def test_reports_empty_sources_apart_from_failed(self):
+        evidence = [{"source": "FRED", "status": "ok", "lines": ["fred a"]},
+                    {"source": "FRED", "status": "empty", "lines": ["fred b"]},
+                    {"source": "Hacker News", "status": "empty", "lines": ["hn"]},
+                    {"source": "arXiv", "status": "failed", "lines": ["arxiv down"]}]
+        prompt = build_prompt(SIGNALS[0], "2026-04", evidence)
+        self.assertIn("Sources that worked but found nothing: Hacker News.", prompt)
+        self.assertIn("Sources unavailable: arXiv.", prompt)
+        self.assertLess(prompt.index("Sources unavailable"), prompt.index("Evidence:"))
+
+
 def good_doc():
     return {"schema": 1, "sample": False, "period": "month", "signals": [{"id": "policy"}], "entries": [{
         "signal": "policy", "period": "2026-04", "status": "unclear", "justification": "Mixed.", "confidence": 2,
@@ -124,6 +136,9 @@ class Ollama(unittest.TestCase):
 class CheckData(unittest.TestCase):
     def test_good_document_passes(self):
         self.assertEqual(problems(good_doc()), [])
+        doc = good_doc()
+        doc["entries"][0]["status"] = "no_change"
+        self.assertEqual(problems(doc), [])
 
     def test_catches_bad_data(self):
         doc = good_doc()

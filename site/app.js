@@ -2,12 +2,14 @@
 // links are restricted to http(s). The data is LLM- and third-party-derived.
 
 // Minutes to midnight shown on the clock for each status. The only place this mapping lives.
+// no_change has no entry: a quiet month is not a direction, so the clock shows no hands.
 const MINUTES_TO_MIDNIGHT = { accelerating: 2, unclear: 7, stabilizing: 15 };
 
 const STATUS = {
   accelerating: { label: "Accelerating", glyph: "▲" },
   stabilizing: { label: "Stabilizing", glyph: "▼" },
   unclear: { label: "Unclear", glyph: "?" },
+  no_change: { label: "No change", glyph: "=" },
 };
 
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -60,7 +62,7 @@ function knownStatus(s) {
   return Object.hasOwn(STATUS, s) ? s : null;
 }
 
-// Clock face. status null → no hands.
+// Clock face. A status without minutes (no_change, or null for no reading) → no hands, a label instead.
 function dial(status, label) {
   const box = el("div", { class: "dial" });
   const s = svg("svg", { viewBox: "0 0 120 120", role: "img", "aria-label": label });
@@ -77,8 +79,8 @@ function dial(status, label) {
       x2: cx + (r - 3) * Math.sin(a), y2: cy - (r - 3) * Math.cos(a),
     }));
   }
-  if (status) {
-    const min = MINUTES_TO_MIDNIGHT[status];
+  const min = MINUTES_TO_MIDNIGHT[status];
+  if (min) {
     const minuteDeg = (60 - min) * 6;
     const hourDeg = (11 + (60 - min) / 60) * 30;
     // Wedge from the minute hand to midnight.
@@ -94,7 +96,7 @@ function dial(status, label) {
     s.append(svg("circle", { class: "hub", cx, cy, r: 3.5 }));
   } else {
     const t = svg("text", { class: "empty-label", x: cx, y: cy + 3 });
-    t.textContent = "NO READING";
+    t.textContent = status ? STATUS[status].label.toUpperCase() : "NO READING";
     s.append(t);
   }
   box.append(s);
@@ -103,6 +105,7 @@ function dial(status, label) {
 
 function dialLabel(name, status) {
   if (!status) return `${name}: no reading`;
+  if (!MINUTES_TO_MIDNIGHT[status]) return `${name}: ${STATUS[status].label}.`;
   return `${name}: ${STATUS[status].label}. Clock reads ${MINUTES_TO_MIDNIGHT[status]} minutes to midnight.`;
 }
 

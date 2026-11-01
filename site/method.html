@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>How classification works · AI 2027 Signal Dashboard</title>
-  <meta name="description" content="How each signal is classified as accelerating, stabilizing, or unclear, and the limits of the method.">
+  <meta name="description" content="How each signal is classified as accelerating, stabilizing, unclear, or no change, and the limits of the method.">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -28,11 +28,18 @@
       <h2>An AI model reads the evidence</h2>
       <p>A large language model receives the evidence for one signal and one month, together with that signal’s definitions of accelerating and stabilizing. It returns:</p>
       <ul>
-        <li>a status: <strong>accelerating</strong>, <strong>stabilizing</strong>, or <strong>unclear</strong>;</li>
+        <li>a status: <strong>accelerating</strong>, <strong>stabilizing</strong>, <strong>unclear</strong>, or <strong>no change</strong> (see below);</li>
         <li>a justification of one or two sentences;</li>
         <li>a confidence score from 1 (low) to 5 (high).</li>
       </ul>
       <p>The model is told to use only the evidence it is given, not what it knows from elsewhere. The model and provider are set in configuration, and each reading records which model produced it. If no source returns data for a signal in a month, that month shows “no reading” instead of a guess.</p>
+      <h2>The four statuses, and no reading</h2>
+      <ul>
+        <li><strong>Accelerating</strong> and <strong>stabilizing</strong> each need specific evidence in that direction, as defined for the signal. A quiet month is not stabilizing.</li>
+        <li><strong>Unclear</strong>: the evidence is mixed or too thin to call.</li>
+        <li><strong>No change</strong>: the sources worked and found nothing notable that month. That is information, but not a direction, so the clock shows no hands.</li>
+        <li><strong>No reading</strong> is not a status. It means every source failed for that month, so we do not know.</li>
+      </ul>
       <h2>Backfilled months</h2>
       <p>So that the dashboard starts with a trend instead of a single point, the months before launch were classified after the fact, with the same prompt and settings as the monthly run. They are marked as backfilled. Treat them with extra care:</p>
       <ul>
