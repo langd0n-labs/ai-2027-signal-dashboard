@@ -229,6 +229,53 @@ function renderDashboard(data) {
   document.getElementById("updated").textContent = `${kind} · ${generated}`;
 }
 
+const WEEKLY_STATE = {
+  none: "No notable developments this week.",
+  no_data: "No update: every source for this signal failed this week.",
+  failed: "No update: the summary for this signal could not be made this week.",
+};
+
+function dayRange(w) {
+  return w?.start && w?.end ? `${formatDate(w.start)} to ${formatDate(w.end)}` : "unknown dates";
+}
+
+// data/weekly.json, or null when no weekly update has been published.
+function renderWeekly(data) {
+  const list = document.getElementById("weekly-list");
+  const head = document.getElementById("weekly-window");
+  if (!data) {
+    head.textContent = "";
+    list.replaceChildren(el("p", { text: "No weekly update has been published yet." }));
+    return;
+  }
+  head.textContent = `Week of ${dayRange(data.window)} (compared with ${dayRange(data.comparison)}) · Published ${data.published ? formatDate(data.published) : "date unknown"}${data.model ? ` · Summarized by ${String(data.model)}` : ""}`;
+  list.replaceChildren(...(Array.isArray(data.signals) ? data.signals : []).map((s) => {
+    const item = el("article", { class: "weekly-item" }, el("h3", { text: String(s?.name ?? s?.id ?? "Signal") }));
+    const devs = Array.isArray(s?.developments) ? s.developments : [];
+    if (devs.length) {
+      const ul = el("ul");
+      for (const d of devs) {
+        const links = (Array.isArray(d?.sources) ? d.sources : []).map((src) => {
+          const url = safeUrl(src?.url);
+          const title = String(src?.title ?? src?.url ?? "Source");
+          return url ? el("a", { href: url, rel: "noopener noreferrer", text: title }) : el("span", { text: title });
+        });
+        const cite = el("span", { class: "cite" }, " Sources: ");
+        links.forEach((a, i) => cite.append(...(i ? ["; ", a] : [a])));
+        ul.append(el("li", {}, String(d?.summary ?? ""), links.length ? cite : null));
+      }
+      item.append(ul);
+    } else {
+      item.append(el("p", { class: "quiet", text: WEEKLY_STATE[s?.state] ?? WEEKLY_STATE.failed }));
+    }
+    const failed = Array.isArray(s?.failed_sources) ? s.failed_sources.map(String) : [];
+    if (failed.length && s?.state !== "no_data") {
+      item.append(el("p", { class: "meta-line", text: `Unavailable this week: ${failed.join(", ")}.` }));
+    }
+    return item;
+  }));
+}
+
 function renderDefinitions(data) {
   const dl = document.getElementById("definitions");
   dl.replaceChildren();
@@ -240,9 +287,23 @@ function renderDefinitions(data) {
   }
 }
 
+// The weekly file is optional and loads on its own, so a missing or broken one never hides the monthly readings.
+async function loadWeekly() {
+  try {
+    const res = await fetch("data/weekly.json", { cache: "no-cache" });
+    if (res.status === 404) return renderWeekly(null);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    renderWeekly(await res.json());
+  } catch (err) {
+    document.getElementById("weekly-list").replaceChildren(
+      el("p", { class: "error", text: `The weekly developments could not be loaded (${err.message}). Try again later.` }));
+  }
+}
+
 async function main() {
   const page = document.body.dataset.page;
   if (page !== "dashboard" && page !== "signals") return;
+  if (page === "dashboard") loadWeekly();
   try {
     const res = await fetch("data/signals.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

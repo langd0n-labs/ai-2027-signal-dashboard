@@ -1,4 +1,6 @@
-"""Ask the configured LLM to classify one signal for one month from the collected evidence."""
+"""Ask the configured LLM to classify one signal for one month from the collected evidence.
+
+classify() also serves the weekly developments (weekly.py), which pass their own system prompt, schema and check."""
 
 STATUSES = ("accelerating", "stabilizing", "unclear")
 MAX_JUSTIFICATION = 400  # characters; the prompt asks for at most 300
@@ -58,16 +60,16 @@ def validate(result):
     return {"status": result["status"], "justification": result["justification"].strip(), "confidence": result["confidence"]}
 
 
-def classify(llm, prompt):
-    """Return (validated result, model that served it). Only the providers below are implemented."""
+def classify(llm, prompt, system=SYSTEM, schema=SCHEMA, check=validate):
+    """Return (checked result, model that served it). Only the providers below are implemented."""
     if llm["provider"] == "anthropic":
-        return _anthropic(llm, prompt)
+        return _anthropic(llm, prompt, system, schema, check)
     if llm["provider"] == "ollama":
-        return _ollama(llm, prompt)
+        return _ollama(llm, prompt, system, schema, check)
     raise ValueError(f"LLM provider {llm['provider']!r} is not implemented; add a branch in classify_signals.py")
 
 
-def _anthropic(llm, prompt):
+def _anthropic(llm, prompt, system, schema, check):
     import json
 
     import anthropic
@@ -76,8 +78,8 @@ def _anthropic(llm, prompt):
         model=llm["model"],
         max_tokens=llm["max_tokens"],
         thinking={"type": "adaptive"},
-        output_config={"effort": llm["effort"], "format": {"type": "json_schema", "schema": SCHEMA}},
-        system=SYSTEM,
+        output_config={"effort": llm["effort"], "format": {"type": "json_schema", "schema": schema}},
+        system=system,
         messages=[{"role": "user", "content": prompt}],
     )
     if response.stop_reason == "refusal":
@@ -85,10 +87,10 @@ def _anthropic(llm, prompt):
     if response.stop_reason == "max_tokens":
         raise RuntimeError("response hit max_tokens")
     text = next(b.text for b in response.content if b.type == "text")
-    return validate(json.loads(text)), response.model
+    return check(json.loads(text)), response.model
 
 
-def _ollama(llm, prompt):
+def _ollama(llm, prompt, system, schema, check):
     """A local model through Ollama (https://ollama.com), for running without an API key. OLLAMA_HOST overrides the address."""
     import json
     import os
@@ -101,8 +103,8 @@ def _ollama(llm, prompt):
     num_ctx = 8192  # Ollama's default window (2048-4096) silently drops the start of a longer prompt, i.e. the instructions
     body = {
         "model": llm["model"],
-        "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt}],
-        "format": SCHEMA,  # Ollama constrains the output to this JSON Schema
+        "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}],
+        "format": schema,  # Ollama constrains the output to this JSON Schema
         "stream": False,
         "options": {"temperature": 0, "num_ctx": num_ctx, "num_predict": min(llm["max_tokens"], 1024)},
     }
@@ -116,4 +118,4 @@ def _ollama(llm, prompt):
         raise RuntimeError("prompt may have been truncated to fit the context window")
     if reply.get("done_reason") == "length":
         raise RuntimeError("response hit max_tokens")
-    return validate(json.loads(reply["message"]["content"])), reply.get("model", llm["model"])
+    return check(json.loads(reply["message"]["content"])), reply.get("model", llm["model"])

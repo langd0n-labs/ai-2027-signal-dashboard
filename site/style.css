@@ -133,6 +133,17 @@ a:hover { color: var(--accent); }
 .legend .mark { width: 22px; height: 22px; }
 .legend + .meta-line { margin-top: 12px; }
 
+/* Weekly developments: a plain list, no dials, so it never reads as a monthly reading */
+.weekly { margin-top: 40px; padding-top: 8px; border-top: 1px solid var(--rule); }
+.weekly-note { color: var(--muted); max-width: 46em; margin: 0 0 8px; }
+.weekly-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 0 32px; margin-top: 16px; }
+.weekly-item { border-left: 3px solid var(--rule); padding: 2px 0 2px 14px; margin-bottom: 20px; min-width: 0; }
+.weekly-item h3 { font: 600 1.05rem/1.3 var(--serif); margin: 0 0 6px; }
+.weekly-item ul { margin: 0; padding-left: 18px; }
+.weekly-item li { margin-bottom: 6px; overflow-wrap: anywhere; }
+.weekly-item .cite { color: var(--muted); font-size: 0.85rem; }
+.weekly-item .quiet { margin: 0; color: var(--muted); font-style: italic; }
+
 .error { border: 1px solid var(--accent); padding: 16px 20px; margin: 32px 0; }
 
 /* Explainer pages */

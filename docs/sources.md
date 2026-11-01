@@ -13,6 +13,21 @@ Task 1 of issue #3: the sources for each signal, and whether each one can return
 | [GDELT DOC 2.0 API](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/) | Public opinion | Yes, tested back to March 2026 | Daily average tone and share of coverage for "artificial intelligence" in English-language news, averaged per month | Allows one request every 5 seconds and throttles bursts even at 20-second gaps. After one failure the pipeline skips GDELT for the rest of the run instead of stalling. |
 | [Hacker News Algolia API](https://hn.algolia.com/api) | All five | Yes, by creation time | The most relevant stories with at least 20 points for each query in the config, linked to their HN discussion pages | Headlines only. Links never use the URL the submitter posted.  Per-month story totals are not comparable: the index holds 368,063 stories for March 2026 and 29,607 for April, so counts are not used as a measure of attention. |
 
+## Weekly developments
+
+The weekly update (`pipeline/weekly.py`) uses only sources that can be queried for one week, Monday to Sunday:
+
+| Source | Weekly | Why |
+| --- | --- | --- |
+| Federal Register | Yes | Queried by publication date, to the day. |
+| arXiv | Yes | Queried by submission date, to the day. |
+| GDELT | Yes | Daily timeline, averaged over the week. |
+| Hacker News | Yes | Queried by creation time, to the second. |
+| FRED | No, monthly context only | Monthly and quarterly series. Even weekly initial claims (ICSA) are released the Thursday after the week ends, after the Monday run. Passing them in would repeat last month's observations as if they were new this week. |
+| Epoch AI | No, monthly context only | Models are added to the dataset weeks after publication, so a recent week would look empty. |
+
+The slower series inform only the monthly readings. The site says so above the weekly list.
+
 ## Sources considered and not used
 
 - **Layoffs.fyi**: no public API, and its data sits in an Airtable view. Scraping it may break its terms.

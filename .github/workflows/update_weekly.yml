@@ -1,0 +1,114 @@
+# Summarizes each signal's developments for the last complete ISO week into data/weekly.json and
+# publishes it automatically, the same way as update_signals.yml. It never writes data/signals.json.
+name: Update weekly developments
+
+on:
+  schedule:
+    - cron: "0 14 * * 1" # Monday: the week (Monday to Sunday, UTC) that just ended
+  workflow_dispatch:
+    inputs:
+      week:
+        description: "ISO week (YYYY-Www). Empty means the last complete week."
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-weekly
+
+jobs:
+  update:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: signals # holds API and App credentials; only main may use it
+    steps:
+      - name: Check App configuration
+        env:
+          SIGNALS_APP_CLIENT_ID: ${{ vars.SIGNALS_APP_CLIENT_ID }}
+          SIGNALS_APP_PRIVATE_KEY: ${{ secrets.SIGNALS_APP_PRIVATE_KEY }}
+        run: |
+          missing=0
+          for setting in SIGNALS_APP_CLIENT_ID SIGNALS_APP_PRIVATE_KEY; do
+            if [ -z "${!setting}" ]; then
+              echo "::error::Missing signals environment setting: $setting"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false # pip and the pipeline must not be able to reuse the write token
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: pip install -r pipeline/requirements.txt
+
+      - name: Summarize
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SIGNALS_LLM_PROVIDER: ${{ vars.SIGNALS_LLM_PROVIDER }}
+          SIGNALS_LLM_MODEL: ${{ vars.SIGNALS_LLM_MODEL }}
+          SIGNALS_LLM_EFFORT: ${{ vars.SIGNALS_LLM_EFFORT }}
+          WEEK: ${{ inputs.week }}
+          RUN_SUMMARY: ${{ runner.temp }}/summary.md
+        run: |
+          args=()
+          [ -n "$WEEK" ] && args+=(--week "$WEEK")
+          python pipeline/test_pipeline.py
+          code=0
+          python pipeline/weekly.py "${args[@]}" || code=$?
+          case $code in
+            0) ;;
+            3) echo "PARTIAL=1" >> "$GITHUB_ENV" ;;  # incomplete: some signals failed or had no data; shown on the site
+            4) echo "::error::No signal could be summarized; nothing to publish."; exit 1 ;;
+            *) echo "::error::The pipeline crashed (exit $code)."; exit 1 ;;
+          esac
+          cat "$RUN_SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check the data
+        run: python pipeline/check_data.py
+
+      # Mint after classification and validation to preserve the token's one-hour lifetime.
+      - name: Create data PR token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.SIGNALS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SIGNALS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Open and auto-merge the data PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          RUN_SUMMARY: ${{ runner.temp }}/summary.md
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          git add data
+          if git diff --cached --quiet; then echo "No changes."; exit 0; fi
+          branch="data/weekly-${{ github.run_id }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          printf 'Update weekly developments\n\nRun: %s\n\nAI-Attribution: AI-G\n' "$RUN_URL" | git commit -q -F -
+          git push -q "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$branch"
+          note=""
+          [ -n "$PARTIAL" ] && note=$'\n\n**This update is incomplete:** some signals failed or had no source data. The site says so for each one.'
+          body="$(printf 'Automated run: %s\n\n%s%s\n\nThe developments were summarized by the LLM named in `data/weekly.json`; the evidence is in `data/evidence/`.\n\nAI-Attribution: AI-G' "$RUN_URL" "$(cat "$RUN_SUMMARY")" "$note")"
+          gh pr create --base main --head "$branch" --title "Update weekly developments" --body "$body"
+          gh pr merge "$branch" --auto --squash
+          for _ in $(seq 60); do
+            [ "$(gh pr view "$branch" --json state --jq .state)" = MERGED ] && { echo "merged=1" >> "$GITHUB_OUTPUT"; exit 0; }
+            sleep 10
+          done
+          echo "::error::The data PR did not merge within 10 minutes."; exit 1
+
+      - name: Fail if the update is incomplete
+        if: env.PARTIAL == '1'
+        run: exit 1
