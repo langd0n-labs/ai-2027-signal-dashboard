@@ -121,6 +121,42 @@ class Ollama(unittest.TestCase):
                 self.call(content, **reply)
 
 
+class OpenAICompatible(unittest.TestCase):
+    def call(self, message, finish="stop", key="k"):
+        import io, json, os
+        from unittest import mock
+        from classify_signals import classify
+        sent = {}
+
+        def fake_urlopen(request, timeout):
+            sent.update(url=request.full_url, auth=request.get_header("Authorization"), body=json.loads(request.data))
+            reply = {"model": "gpt-x", "choices": [{"finish_reason": finish, "message": message}]}
+            return io.BytesIO(json.dumps(reply).encode())
+
+        llm = {"provider": "openai", "model": "gpt-x", "base_url": "https://api.groq.com/openai/v1/"}
+        with mock.patch("urllib.request.urlopen", fake_urlopen), mock.patch.dict(os.environ, {"SIGNALS_LLM_API_KEY": key} if key else {}, clear=True):
+            return classify(llm, "prompt"), sent
+
+    def test_sends_schema_key_and_base_url(self):
+        import json
+        from classify_signals import SCHEMA
+        good = {"content": json.dumps({"status": "stabilizing", "justification": "Fewer filings.", "confidence": 3})}
+        (result, model), sent = self.call(good)
+        self.assertEqual(sent["url"], "https://api.groq.com/openai/v1/chat/completions")
+        self.assertEqual(sent["auth"], "Bearer k")
+        self.assertEqual(sent["body"]["response_format"]["json_schema"]["schema"], SCHEMA)
+        self.assertEqual((result["status"], model), ("stabilizing", "gpt-x"))
+
+    def test_rejects_bad_replies_and_missing_key(self):
+        import json
+        good = {"content": json.dumps({"status": "unclear", "justification": "x", "confidence": 2})}
+        for kwargs in ({"message": {"content": None, "refusal": "no"}}, {"message": good, "finish": "length"},
+                       {"message": {"content": json.dumps({"status": "bogus", "justification": "x", "confidence": 2})}},
+                       {"message": good, "key": None}):
+            with self.assertRaises((ValueError, RuntimeError)):
+                self.call(**kwargs)
+
+
 class CheckData(unittest.TestCase):
     def test_good_document_passes(self):
         self.assertEqual(problems(good_doc()), [])

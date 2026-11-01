@@ -1,6 +1,8 @@
 # Pipeline configuration. The pipeline reads every choice below from this file.
-# Environment variables override the LLM settings: SIGNALS_LLM_PROVIDER, SIGNALS_LLM_MODEL, SIGNALS_LLM_EFFORT.
-# Providers: "anthropic" (needs ANTHROPIC_API_KEY) or "ollama" (a local model, no key; effort is ignored).
+# Environment variables override the LLM settings: SIGNALS_LLM_PROVIDER, SIGNALS_LLM_MODEL, SIGNALS_LLM_EFFORT,
+# SIGNALS_LLM_BASE_URL. The API key is always SIGNALS_LLM_API_KEY, whatever the provider.
+# Providers: "anthropic"; "openai" (any OpenAI-compatible API, chosen by base_url, default OpenAI's);
+# "ollama" (a local model, no key). Effort applies to anthropic only.
 
 [llm]
 provider = "anthropic"
