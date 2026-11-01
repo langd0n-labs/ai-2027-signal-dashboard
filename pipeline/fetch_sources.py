@@ -1,4 +1,7 @@
-"""Collect evidence for one signal and one month from public sources that accept past dates.
+"""Collect evidence for one signal and one period from public sources that accept past dates.
+
+A period is a calendar month ("2026-09") for the monthly readings or an ISO week ("2026-W43",
+Monday to Sunday) for the weekly developments.
 
 Every fetcher returns a dict: {"source", "status", "lines", "links"}.
 - "status" is "ok" (found something), "empty" (worked, found nothing) or "failed" (could not fetch).
@@ -17,7 +20,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import date
+from datetime import date, timedelta
 from functools import lru_cache
 
 USER_AGENT = "ai-2027-signal-dashboard (+https://github.com/langd0n-labs/ai-2027-signal-dashboard)"
@@ -36,6 +39,30 @@ def month_bounds(period):
 def prev_month(period):
     year, month = map(int, period.split("-"))
     return f"{year - 1}-12" if month == 1 else f"{year}-{month - 1:02d}"
+
+
+def is_week(period):
+    return "-W" in period
+
+
+def bounds(period):
+    """First and last day of a month or an ISO week: '2026-W43' -> (date(2026, 10, 19), date(2026, 10, 25))."""
+    if not is_week(period):
+        return month_bounds(period)
+    year, week = map(int, period.split("-W"))
+    start = date.fromisocalendar(year, week, 1)
+    return start, start + timedelta(days=6)
+
+
+def prev_period(period):
+    if not is_week(period):
+        return prev_month(period)
+    year, week, _ = (bounds(period)[0] - timedelta(days=7)).isocalendar()
+    return f"{year}-W{week:02d}"
+
+
+def unit(period):
+    return "week" if is_week(period) else "month"
 
 
 def get(url, retries=4, wait=10):
@@ -82,7 +109,7 @@ def _fred_rows(sid):
 
 def fred(series, period):
     """Last 13 observations on or before the end of the month, so the model sees the trend."""
-    _, end = month_bounds(period)
+    _, end = bounds(period)
     sid = series["id"]
     obs = [(d, v) for d, v in _fred_rows(sid) if d <= end.isoformat() and v not in ("", ".")][-13:]
     if not obs:
@@ -97,7 +124,7 @@ def federal_register(term, period):
     """Count of Federal Register documents matching the term this month vs last month, plus top titles."""
 
     def query(p, per_page):
-        start, end = month_bounds(p)
+        start, end = bounds(p)
         params = {
             "conditions[term]": term,
             "conditions[publication_date][gte]": start.isoformat(),
@@ -108,9 +135,9 @@ def federal_register(term, period):
         }
         return json.loads(get("https://www.federalregister.gov/api/v1/documents.json?" + urllib.parse.urlencode(params, doseq=True)))
 
-    now, before = query(period, 8), query(prev_month(period), 1)
+    now, before = query(period, 8), query(prev_period(period), 1)
     docs = now.get("results", [])
-    lines = [f"Federal Register documents matching {term}: {now.get('count', 0)} this month, {before.get('count', 0)} the month before."]
+    lines = [f"Federal Register documents matching {term}: {now.get('count', 0)} this {unit(period)}, {before.get('count', 0)} the {unit(period)} before."]
     lines += [f"- [{d.get('type', '')}] {d['title']} ({', '.join(a.get('name', '') for a in d.get('agencies') or [])})" for d in docs]
     links = [{"title": d["title"], "url": d["html_url"]} for d in docs[:3]]
     return result("Federal Register", lines, links, bool(docs))
@@ -126,13 +153,13 @@ def hn(query, period):
     (368,063 stories indexed for March 2026, 29,607 for April), so counts are not comparable.
     Links go to the HN discussion page, never to the URL the submitter posted.
     """
-    start, end = month_bounds(period)
+    start, end = bounds(period)
     lo = calendar.timegm(start.timetuple())
     hi = calendar.timegm(end.timetuple()) + 86400
     params = {"query": query, "tags": "story", "hitsPerPage": 6, "numericFilters": f"created_at_i>={lo},created_at_i<{hi},points>={HN_MIN_POINTS}"}
     hits = json.loads(get("https://hn.algolia.com/api/v1/search?" + urllib.parse.urlencode(params))).get("hits", [])
     hits.sort(key=lambda h: h.get("points") or 0, reverse=True)
-    lines = [f"Relevant Hacker News stories matching '{query}' this month, {HN_MIN_POINTS}+ points (headlines, not a measure of volume):"]
+    lines = [f"Relevant Hacker News stories matching '{query}' this {unit(period)}, {HN_MIN_POINTS}+ points (headlines, not a measure of volume):"]
     links = []
     for h in hits:
         url = f"https://news.ycombinator.com/item?id={h['objectID']}"
@@ -145,7 +172,7 @@ def arxiv(query, period):
     """Number of new arXiv submissions in the category this month vs last month."""
 
     def total(p):
-        start, end = month_bounds(p)
+        start, end = bounds(p)
         q = f"{query} AND submittedDate:[{start:%Y%m%d}0000 TO {end:%Y%m%d}2359]"
         # max_results=0 makes arXiv return HTTP 500, so ask for one result and read only the total.
         xml = get("https://export.arxiv.org/api/query?" + urllib.parse.urlencode({"search_query": q, "max_results": 1}))
@@ -153,10 +180,11 @@ def arxiv(query, period):
         time.sleep(3)  # arXiv asks for 3 seconds between API calls
         return int(node.text)
 
-    now, before = total(period), total(prev_month(period))
+    now, before = total(period), total(prev_period(period))
     category = query.removeprefix("cat:")
-    return result("arXiv", [f"arXiv submissions in {query}: {now} this month, {before} the month before."],
-                  [{"title": f"arXiv listing: {category}, {period}", "url": f"https://arxiv.org/list/{category}/{period}"}], now > 0)
+    listing = f"{bounds(period)[1]:%Y-%m}"  # arXiv lists by month; a week links to the month it ends in
+    return result("arXiv", [f"arXiv submissions in {query}: {now} this {unit(period)}, {before} the {unit(period)} before."],
+                  [{"title": f"arXiv listing: {category}, {listing}", "url": f"https://arxiv.org/list/{category}/{listing}"}], now > 0)
 
 
 @lru_cache(maxsize=1)
@@ -170,12 +198,12 @@ def _published_in(row, start, end):
 
 def epoch_models(period):
     """Notable AI models Epoch AI records as published this month, with training compute where known."""
-    start, end = month_bounds(period)
-    pstart, pend = month_bounds(prev_month(period))
+    start, end = bounds(period)
+    pstart, pend = bounds(prev_period(period))
     rows = _epoch_rows()
     now = [r for r in rows if _published_in(r, start, end)]
     before = sum(_published_in(r, pstart, pend) for r in rows)
-    lines = [f"Epoch AI notable models published: {len(now)} this month, {before} the month before."]
+    lines = [f"Epoch AI notable models published: {len(now)} this {unit(period)}, {before} the {unit(period)} before."]
     for r in now[:12]:
         compute = r.get("Training compute (FLOP)") or "unknown"
         lines.append(f"- {r['Model']} ({r.get('Organization', '')}), training compute {compute} FLOP")
@@ -183,8 +211,9 @@ def epoch_models(period):
     return result("Epoch AI", lines, links, bool(now))
 
 
-def _month_avg(points, period):
-    values = [p["value"] for p in points if p["date"][:6] == period.replace("-", "")]
+def _period_avg(points, period):
+    start, end = bounds(period)
+    values = [p["value"] for p in points if f"{start:%Y%m%d}" <= p["date"][:8] <= f"{end:%Y%m%d}"]
     return sum(values) / len(values) if values else None
 
 
@@ -206,8 +235,8 @@ def gdelt(query, period):
         raise RuntimeError("GDELT failed earlier in this run")
 
     def series(mode):
-        start, _ = month_bounds(prev_month(period))
-        _, end = month_bounds(period)
+        start, _ = bounds(prev_period(period))
+        _, end = bounds(period)
         params = {
             "query": query, "mode": mode, "format": "json",
             "startdatetime": f"{start:%Y%m%d}000000", "enddatetime": f"{end:%Y%m%d}235959",
@@ -215,7 +244,7 @@ def gdelt(query, period):
         data = json.loads(get("https://api.gdeltproject.org/api/v2/doc/doc?" + urllib.parse.urlencode(params), retries=3, wait=20))
         time.sleep(10)  # GDELT allows one request every 5 seconds and throttles bursts
         points = data["timeline"][0]["data"]
-        return _month_avg(points, period), _month_avg(points, prev_month(period))
+        return _period_avg(points, period), _period_avg(points, prev_period(period))
 
     try:
         tone, tone_before = series("timelinetone")
@@ -227,21 +256,26 @@ def gdelt(query, period):
         "source": "GDELT",
         "status": "ok" if tone is not None or vol is not None else "empty",
         "lines": [
-            f"GDELT average tone of worldwide news coverage matching {query} (negative is more negative): {_fmt(tone)} this month, {_fmt(tone_before)} the month before.",
-            f"GDELT share of all monitored news coverage matching {query} (percent): {_fmt(vol)} this month, {_fmt(vol_before)} the month before.",
+            f"GDELT average tone of worldwide news coverage matching {query} (negative is more negative): {_fmt(tone)} this {unit(period)}, {_fmt(tone_before)} the {unit(period)} before.",
+            f"GDELT share of all monitored news coverage matching {query} (percent): {_fmt(vol)} this {unit(period)}, {_fmt(vol_before)} the {unit(period)} before.",
         ],
         "links": [{"title": "GDELT DOC 2.0 API", "url": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/"}],
     }
 
 
 def collect(signal, period):
-    """All evidence for one signal and month, in the order the config lists the sources."""
+    """All evidence for one signal and period, in the order the config lists the sources.
+
+    A week skips FRED and Epoch AI: their monthly and quarterly series, and Epoch's curation lag, would
+    repeat last month's observations as if they were new this week. They stay monthly-only.
+    """
+    weekly = is_week(period)
     parts = []
     if "federal_register" in signal:
         parts.append(safe("Federal Register", federal_register, signal["federal_register"], period))
-    for series in signal.get("fred", []):
+    for series in [] if weekly else signal.get("fred", []):
         parts.append(safe("FRED", fred, series, period))
-    if signal.get("epoch_models"):
+    if signal.get("epoch_models") and not weekly:
         parts.append(safe("Epoch AI", epoch_models, period))
     if "arxiv" in signal:
         parts.append(safe("arXiv", arxiv, signal["arxiv"], period))

@@ -8,7 +8,9 @@ python pipeline/test_pipeline.py                     # unit tests, no network
 python pipeline/run.py --period 2026-09 --dry-run    # print the evidence; no LLM call, nothing written
 ANTHROPIC_API_KEY=... python pipeline/run.py         # classify the last complete month
 SIGNALS_LLM_PROVIDER=ollama SIGNALS_LLM_MODEL=qwen2.5:7b python pipeline/run.py   # same, with a local model and no key
-python pipeline/check_data.py                        # check data/signals.json against docs/data-format.md
+python pipeline/weekly.py --dry-run                  # print the weekly evidence for the last complete week; no LLM call
+ANTHROPIC_API_KEY=... python pipeline/weekly.py      # weekly developments for the last complete week, into data/weekly.json
+python pipeline/check_data.py                        # check data/signals.json (and data/weekly.json) against docs/data-format.md
 python3 -m http.server -d site 8000                  # preview the site at http://localhost:8000
 ```
 
@@ -37,6 +39,12 @@ python3 -m http.server -d site 8000                  # preview the site at http:
 5. The App-authenticated merge triggers **Deploy site** through its push to `main`.
 
 If some signals fail or have no source data, the job publishes the remaining results and includes a partial summary. It then ends red. If no files change, it opens no PR.
+
+**Update weekly developments** (`.github/workflows/update_weekly.yml`) runs every Monday for the ISO week (Monday to Sunday, UTC) that just ended. It can also be run by hand for one week. It publishes `data/weekly.json` through the same App, environment, secrets, data PR and auto-merge path as **Update signals**, and never writes `data/signals.json`. Exit codes match `run.py`: 3 when some signals had no data or failed (published, shown on the site, job ends red), 4 when nothing could be summarized (nothing published).
+
+- **Model:** the same `[llm]` settings and `SIGNALS_LLM_*` overrides as the monthly run.
+- **Call volume:** one LLM call per signal per week, so 5 calls a week (about 22 a month, next to the 5 monthly calls). Each prompt is roughly 1,000 input tokens (fewer sources than the monthly prompt, which is 2,000 to 3,000 characters), and each answer is capped by `max_tokens` (4,000, including thinking). Expect well under 30,000 tokens a week in total.
+- **Source requests:** about 21 a week: Federal Register 2, arXiv 2, GDELT 2, Hacker News 15. The run takes a few minutes.
 
 **data-check** (`.github/workflows/data-check.yml`) runs pipeline tests on every PR, including automated data PRs. It also runs `pipeline/check_data.py` when the PR changes `data/`. Invalid data blocks merge.
 
