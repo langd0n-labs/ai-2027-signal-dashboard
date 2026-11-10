@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-10-25T09:18:12Z",
+  "updated": "2026-11-10T20:44:44Z",
   "sample": false,
   "period": "month",
   "overall": null,
@@ -1134,6 +1134,191 @@
       "model": "claude-sonnet-5-5",
       "run": "scheduled",
       "classified_at": "2026-10-25T09:18:12Z"
+    },
+    {
+      "signal": "policy",
+      "period": "2026-10",
+      "status": "unclear",
+      "justification": "Federal Register volume is flat (31 vs 29). One race-framing item (\"Inaugurating the Era of Super Intelligence\") and a DeepSeek procurement ban point toward acceleration, but no binding safety rules appear. Hacker News stories are mostly off-topic or about proposals.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Division of Program Coordination, Planning, and Strategic Initiatives, Office of the Director Notice of Proposed Reorganization",
+          "url": "https://www.federalregister.gov/documents/2026/10/14/2026-20891/division-of-program-coordination-planning-and-strategic-initiatives-office-of-the-director-notice-of"
+        },
+        {
+          "title": "Notice of Order Regarding Exclusion and Removal of DeepSeek Products From Federal Civilian Executive Branch Information Technology Systems and Procurements",
+          "url": "https://www.federalregister.gov/documents/2026/10/20/2026-21447/notice-of-order-regarding-exclusion-and-removal-of-deepseek-products-from-federal-civilian-executive"
+        },
+        {
+          "title": "Notice of Public Meetings of the Michigan Advisory Committee to the U.S. Commission on Civil Rights",
+          "url": "https://www.federalregister.gov/documents/2026/10/23/2026-21710/notice-of-public-meetings-of-the-michigan-advisory-committee-to-the-us-commission-on-civil-rights"
+        },
+        {
+          "title": "Tell HN: GitHub refuses to remove cracked copies of my software after a month",
+          "url": "https://news.ycombinator.com/item?id=49982498"
+        },
+        {
+          "title": "Big Tech Oligarchs Have a Terrible Plan for Humanity",
+          "url": "https://news.ycombinator.com/item?id=50153403"
+        },
+        {
+          "title": "Meta Uses A.I. Data Centers to Avoid Billions in Federal Taxes",
+          "url": "https://news.ycombinator.com/item?id=49921118"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "scheduled",
+      "classified_at": "2026-11-10T20:42:51Z"
+    },
+    {
+      "signal": "labor",
+      "period": "2026-10",
+      "status": "stabilizing",
+      "justification": "Unemployment fell to 4.1% in October from 4.4-4.5% a year earlier, weekly jobless claims dropped to 189,000, and payrolls kept growing. JOLTS layoffs eased to 1,641k in September, and the Hacker News stories shown are not about AI-driven layoffs.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Unemployment rate (%)",
+          "url": "https://fred.stlouisfed.org/series/UNRATE"
+        },
+        {
+          "title": "FRED: Initial jobless claims (weekly)",
+          "url": "https://fred.stlouisfed.org/series/ICSA"
+        },
+        {
+          "title": "FRED: JOLTS layoffs and discharges (thousands)",
+          "url": "https://fred.stlouisfed.org/series/JTSLDL"
+        },
+        {
+          "title": "FRED: Nonfarm payroll employment (thousands)",
+          "url": "https://fred.stlouisfed.org/series/PAYEMS"
+        },
+        {
+          "title": "LayerFS: A filesystem for AI coding agents",
+          "url": "https://news.ycombinator.com/item?id=50179857"
+        },
+        {
+          "title": "Cisco gives engineer unlimited AI tokens to rewrite legacy code",
+          "url": "https://news.ycombinator.com/item?id=50304122"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "scheduled",
+      "classified_at": "2026-11-10T20:42:55Z"
+    },
+    {
+      "signal": "technology",
+      "period": "2026-10",
+      "status": "unclear",
+      "justification": "Epoch notable models fell from 20 to 6 and most compute figures are unknown, but Gemini 4 Carbon was released and arXiv cs.AI submissions rose about 8%. The Hacker News stories show attention rather than capability jumps, so the evidence is mixed.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Epoch AI: Notable AI Models dataset (CC BY 4.0)",
+          "url": "https://epoch.ai/data/notable-ai-models"
+        },
+        {
+          "title": "arXiv listing: cs.AI, 2026-10",
+          "url": "https://arxiv.org/list/cs.AI/2026-10"
+        },
+        {
+          "title": "Krea 3 – An image model built for editing at scale",
+          "url": "https://news.ycombinator.com/item?id=50105648"
+        },
+        {
+          "title": "Show HN: Omnara – Open-source alternative to Claude Managed Agents",
+          "url": "https://news.ycombinator.com/item?id=50183892"
+        },
+        {
+          "title": "OpenShell – A safe, private runtime for fleets of autonomous AI agents",
+          "url": "https://news.ycombinator.com/item?id=50198675"
+        },
+        {
+          "title": "We ran AI agent swarms in Minecraft and Mindustry",
+          "url": "https://news.ycombinator.com/item?id=50296486"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "scheduled",
+      "classified_at": "2026-11-10T20:43:04Z"
+    },
+    {
+      "signal": "opinion",
+      "period": "2026-10",
+      "status": "unclear",
+      "justification": "HN headlines show some negative sentiment (a poll saying most Americans think AI is bad for society, Google staff resignations over military AI contracts). But GDELT is unavailable, there is no prior-month comparison, and the protest results are mostly unrelated.",
+      "confidence": 2,
+      "sources": [
+        {
+          "title": "Google staff resign in backlash over its AI contracts with military",
+          "url": "https://news.ycombinator.com/item?id=50186043"
+        },
+        {
+          "title": "R/opensource bans AI-made and AI-focused projects and non-English speakers",
+          "url": "https://news.ycombinator.com/item?id=50242884"
+        },
+        {
+          "title": "Police are using AI to pull over drivers for 'suspicious' behavior",
+          "url": "https://news.ycombinator.com/item?id=50261819"
+        },
+        {
+          "title": "Most Americans Say AI Is Bad for Society, Oppose More Data Centers",
+          "url": "https://news.ycombinator.com/item?id=50200843"
+        },
+        {
+          "title": "Dayjob: Tax – evaluating AI agents on 50 professional tax assignments",
+          "url": "https://news.ycombinator.com/item?id=50275626"
+        },
+        {
+          "title": "Ask HN: Do you want a router that has DD-WRT pre-installed?",
+          "url": "https://news.ycombinator.com/item?id=50039291"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "scheduled",
+      "classified_at": "2026-11-10T20:44:40Z"
+    },
+    {
+      "signal": "economy",
+      "period": "2026-10",
+      "status": "accelerating",
+      "justification": "Productivity rose to 121.9 in Q3 2026 while the labor share fell to 93.7, its lowest in the series, and real median weekly earnings dropped from 378 to 370. Nominal wages kept rising, and the HN headlines on AI investment are only weak attention signals.",
+      "confidence": 4,
+      "sources": [
+        {
+          "title": "FRED: Labor productivity, output per hour (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/OPHNFB"
+        },
+        {
+          "title": "FRED: Real median weekly earnings (1982-84 dollars, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/LES1252881600Q"
+        },
+        {
+          "title": "FRED: Labor share of income, nonfarm business (index, quarterly)",
+          "url": "https://fred.stlouisfed.org/series/PRS85006173"
+        },
+        {
+          "title": "FRED: Average hourly earnings, private (dollars)",
+          "url": "https://fred.stlouisfed.org/series/CES0500000003"
+        },
+        {
+          "title": "Show HN: OpenChart – OSS TradingView alternative with your own AI agent",
+          "url": "https://news.ycombinator.com/item?id=49979793"
+        },
+        {
+          "title": "Banks are now trying to offload the AI data center debt they just underwrote",
+          "url": "https://news.ycombinator.com/item?id=50092664"
+        }
+      ],
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "run": "scheduled",
+      "classified_at": "2026-11-10T20:44:44Z"
     }
   ]
 }
