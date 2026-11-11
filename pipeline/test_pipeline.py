@@ -2,9 +2,9 @@
 
 import unittest
 
-from check_data import problems
+from check_data import problems, weekly_problems
 from classify_signals import validate
-from fetch_sources import _month_avg, allowed, month_bounds, prev_month, safe
+from fetch_sources import _period_avg, allowed, bounds, collect, month_bounds, prev_month, prev_period, safe
 from run import last_complete_month, merge, month, months
 
 SIGNALS = [{"id": i, "name": i, "accelerating": "a", "stabilizing": "s"} for i in ("policy", "labor")]
@@ -60,10 +60,10 @@ class Validate(unittest.TestCase):
 
 
 class Gdelt(unittest.TestCase):
-    def test_month_avg(self):
+    def test_period_avg(self):
         pts = [{"date": "20260401T000000Z", "value": 1.0}, {"date": "20260402T000000Z", "value": 3.0}, {"date": "20260301T000000Z", "value": 9}]
-        self.assertEqual(_month_avg(pts, "2026-04"), 2.0)
-        self.assertIsNone(_month_avg(pts, "2026-05"))
+        self.assertEqual(_period_avg(pts, "2026-04"), 2.0)
+        self.assertIsNone(_period_avg(pts, "2026-05"))
 
 
 class Sources(unittest.TestCase):
@@ -205,6 +205,96 @@ class Summary(unittest.TestCase):
         self.assertNotIn("classified without them", text)
 
 
+class Weeks(unittest.TestCase):
+    def test_week_math(self):
+        from datetime import date
+        from weekly import last_complete_week
+        self.assertEqual(bounds("2026-W43"), (date(2026, 10, 19), date(2026, 10, 25)))
+        self.assertEqual(prev_period("2027-W01"), "2026-W53")
+        self.assertEqual(prev_period("2026-05"), "2026-04")
+        self.assertEqual(last_complete_week(date(2026, 10, 26)), "2026-W43")  # Monday
+        self.assertEqual(last_complete_week(date(2026, 10, 25)), "2026-W42")  # Sunday: that week is not over
+
+    def test_week_rejects_bad_input(self):
+        from weekly import week
+        self.assertEqual(week("2026-W53"), "2026-W53")
+        for bad in ("2025-W53", "2026-W00", "2026-43", None):
+            with self.assertRaises(Exception):
+                week(bad)
+
+    def test_week_skips_monthly_sources(self):
+        signal = {"fred": [{"id": "UNRATE", "name": "u"}], "epoch_models": True}
+        self.assertEqual(collect(signal, "2026-W43"), [])  # no FRED or Epoch request for a week
+
+    def test_period_avg_for_a_week(self):
+        pts = [{"date": "20261018T000000Z", "value": 9}, {"date": "20261019T000000Z", "value": 1.0}, {"date": "20261025T120000Z", "value": 3.0}]
+        self.assertEqual(_period_avg(pts, "2026-W43"), 2.0)
+
+
+def weekly_doc():
+    return {"schema": 1, "window": {"week": "2026-W43", "start": "2026-10-19", "end": "2026-10-25"},
+            "comparison": {"week": "2026-W42", "start": "2026-10-12", "end": "2026-10-18"},
+            "published": "2026-10-26T14:00:00Z", "provider": "anthropic", "model": "m", "signals": [
+                {"id": "policy", "name": "Policy", "state": "developments", "failed_sources": [], "developments": [
+                    {"summary": "A rule.", "sources": [{"title": "t", "url": "https://www.federalregister.gov/d/1"}]}]},
+                {"id": "labor", "name": "Labor", "state": "none", "failed_sources": ["GDELT"], "developments": []}]}
+
+
+class Weekly(unittest.TestCase):
+    def run_with(self, collect, classify):
+        import json
+        import tempfile
+        from pathlib import Path
+
+        import weekly
+        tmp = Path(tempfile.mkdtemp())
+        saved = weekly.WEEKLY, weekly.EVIDENCE, weekly.collect, weekly.classify
+        weekly.WEEKLY, weekly.EVIDENCE, weekly.collect, weekly.classify = tmp / "weekly.json", tmp / "evidence", collect, classify
+        try:
+            code = weekly.main(["--week", "2026-W43"])
+            return code, json.loads(weekly.WEEKLY.read_text()) if weekly.WEEKLY.exists() else None
+        finally:
+            weekly.WEEKLY, weekly.EVIDENCE, weekly.collect, weekly.classify = saved
+
+    def test_states_links_and_format(self):
+        fr = {"source": "Federal Register", "status": "ok", "lines": ["x"], "links": [{"title": "Rule", "url": "https://www.federalregister.gov/d/1"}]}
+        bad = {"source": "GDELT", "status": "failed", "lines": ["x"], "links": []}
+        prompts = []
+
+        def classify(llm, prompt, system, schema, check):
+            prompts.append(prompt)
+            if "Signal: Policy" in prompt:
+                return check({"developments": [{"summary": " A rule. ", "sources": [1, 1]}]}), "m"
+            if "Signal: Technology" in prompt:
+                return check({"developments": [{"summary": "x", "sources": [2]}]}), "m"  # no link 2
+            return check({"developments": []}), "m"
+
+        code, doc = self.run_with(lambda s, p: [bad] if s["id"] == "opinion" else [fr, bad], classify)
+        self.assertEqual(code, 3)
+        states = {s["id"]: s["state"] for s in doc["signals"]}
+        self.assertEqual(states, {"policy": "developments", "labor": "none", "technology": "failed", "opinion": "no_data", "economy": "none"})
+        self.assertEqual(doc["signals"][0]["developments"], [{"summary": "A rule.", "sources": [fr["links"][0]]}])
+        self.assertEqual(doc["signals"][1]["failed_sources"], ["GDELT"])
+        self.assertEqual((doc["window"]["start"], doc["comparison"]["end"]), ("2026-10-19", "2026-10-18"))
+        self.assertIn("Week: 2026-10-19 to 2026-10-25. The week before: 2026-10-12 to 2026-10-18.", prompts[0])
+        self.assertIn("[1] Rule", prompts[0])
+        self.assertEqual(weekly_problems(doc), [])
+
+    def test_nothing_summarized_writes_nothing(self):
+        bad = {"source": "GDELT", "status": "failed", "lines": ["x"], "links": []}
+        self.assertEqual(self.run_with(lambda s, p: [bad], None), (4, None))
+
+    def test_check_data_catches_bad_weekly(self):
+        self.assertEqual(weekly_problems(weekly_doc()), [])
+        doc = weekly_doc()
+        doc["window"]["start"] = "2026-10-20"
+        doc["signals"][0]["developments"][0]["sources"] = [{"url": "https://evil.example/x"}]
+        doc["signals"][1]["state"] = "developments"
+        found = " ".join(weekly_problems(doc))
+        for needle in ("window is not one ISO week", "allowed host", "does not match"):
+            self.assertIn(needle, found)
+
+
 class WorkflowPreflight(unittest.TestCase):
     """Exercise the workflow preflight shell without GitHub access."""
 
@@ -212,20 +302,23 @@ class WorkflowPreflight(unittest.TestCase):
     def setUpClass(cls):
         from pathlib import Path
         cls.root = Path(__file__).resolve().parents[1]
-        cls.workflow = (cls.root / ".github/workflows/update_signals.yml").read_text()
+        cls.workflows = [(cls.root / ".github/workflows" / f).read_text() for f in ("update_signals.yml", "update_weekly.yml")]
 
-    def step(self, name):
+    def step(self, workflow, name):
         import re
-        start = self.workflow.index("      - name: " + name + "\n")
-        rest = self.workflow[start:]
+        start = workflow.index("      - name: " + name + "\n")
+        rest = workflow[start:]
         return re.split(r"(?=^      - (?:name:|uses:))", rest, flags=re.M)[1]
 
 
     def test_preflight_reports_missing_names_without_values(self):
+        for workflow in self.workflows:
+            self.check_preflight(self.step(workflow, "Check App configuration"))
+
+    def check_preflight(self, preflight):
         import os
         import subprocess
         import textwrap
-        preflight = self.step("Check App configuration")
         self.assertIn("SIGNALS_APP_CLIENT_ID: ${{ vars.SIGNALS_APP_CLIENT_ID }}", preflight)
         self.assertIn("SIGNALS_APP_PRIVATE_KEY: ${{ secrets.SIGNALS_APP_PRIVATE_KEY }}", preflight)
         script = textwrap.dedent(preflight.split("        run: |\n", 1)[1])

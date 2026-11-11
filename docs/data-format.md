@@ -45,3 +45,39 @@ The pipeline writes this file and the site reads it. Change the format only in a
 | `entries[].run` | `backfill` for months classified after the fact, `scheduled` for the monthly run. |
 
 The full evidence sent to the model for each month is in `data/evidence/YYYY-MM.json`.
+
+# `data/weekly.json` format
+
+The weekly developments (`pipeline/weekly.py`). A separate file, so a weekly run never touches the monthly readings. Each run replaces it with the latest complete week. The site shows it in its own section and handles the file being absent.
+
+```json
+{
+  "schema": 1,
+  "window": { "week": "2026-W43", "start": "2026-10-19", "end": "2026-10-25" },
+  "comparison": { "week": "2026-W42", "start": "2026-10-12", "end": "2026-10-18" },
+  "published": "2026-10-26T14:05:00Z",
+  "provider": "anthropic",
+  "model": "claude-opus-5",
+  "signals": [
+    {
+      "id": "policy",
+      "name": "Policy",
+      "state": "developments",
+      "developments": [{ "summary": "One sentence.", "sources": [{ "title": "...", "url": "https://..." }] }],
+      "failed_sources": ["GDELT"]
+    }
+  ]
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `window` | The evidence window: one ISO week, Monday to Sunday, UTC. |
+| `comparison` | The week before, which the evidence is compared with. |
+| `published` | When the pipeline wrote the file (UTC). |
+| `provider`, `model` | Which LLM wrote the summaries. |
+| `signals[].state` | `developments`: at least one development. `none`: the sources worked and nothing notable happened. `no_data`: every source failed. `failed`: the sources worked but the summary could not be made. |
+| `signals[].developments` | At most three. Each `sources` list is non-empty: the model cites links by number and the pipeline fills in the links, so every URL comes from a source on the allowed hosts. |
+| `signals[].failed_sources` | Sources that failed this week. The summary was made without them. |
+
+The evidence sent to the model for each week is in `data/evidence/YYYY-Www.json`. `check_data.py` checks this file too.
