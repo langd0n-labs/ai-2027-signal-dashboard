@@ -1,16 +1,15 @@
-# Publishes site/ (with data/ through the site/data symlink) to GitHub Pages.
+# Publishes the site and data/signals.json to the root of the gh-pages branch, which GitHub Pages serves.
+# PR previews live under pr-preview/ on the same branch (see preview.yml); this job leaves them in place.
 name: Deploy site
 
 on:
   push:
     branches: [main]
-    paths: ["site/**", "data/**"]
+    paths: ["site/**", "data/signals.json", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write # push to gh-pages
 
 concurrency:
   group: pages
@@ -19,14 +18,19 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: site
-      - id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          persist-credentials: false
+      # Copy site/ but replace its data symlink with only signals.json, so data/evidence/ is not published.
+      - name: Build
+        run: |
+          cp -R site _site
+          rm _site/data && mkdir _site/data && cp data/signals.json _site/data/
+          touch _site/.nojekyll
+      - uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0
+        with:
+          folder: _site
+          branch: gh-pages
+          clean-exclude: pr-preview
+          force: false # rebase onto preview commits instead of overwriting them

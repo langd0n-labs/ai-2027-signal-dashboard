@@ -40,9 +40,14 @@ If some signals fail or have no source data, the job publishes the remaining res
 
 **data-check** (`.github/workflows/data-check.yml`) runs pipeline tests on every PR, including automated data PRs. It also runs `pipeline/check_data.py` when the PR changes `data/`. Invalid data blocks merge.
 
-**Deploy site** (`.github/workflows/pages.yml`) publishes `site/` when `site/` or `data/` changes on `main`. It also supports manual dispatch.
+**Deploy site** (`.github/workflows/pages.yml`) runs when `site/`, `data/signals.json` or the workflow changes on `main`, and by manual dispatch. It copies `site/` and only `data/signals.json` into a build directory, so `data/evidence/` and other files under `data/` are not published. It pushes that directory to the root of the `gh-pages` branch, which GitHub Pages serves. It keeps `pr-preview/` on that branch.
 
-Every action uses a full commit SHA. The `anthropic` dependency uses an exact version. The built-in `GITHUB_TOKEN` has only `contents: read`.
+**Preview site** (`.github/workflows/preview.yml`) builds the same directory for each pull request that changes `site/` or `data/signals.json`, and pushes it to `pr-preview/pr-<number>/` on `gh-pages`. A bot comment on the PR links to the preview, for example `https://ai-signals.langd0n.com/pr-preview/pr-12/`. Each push to the PR updates the preview and the comment. The preview is removed when the PR closes. Maintainers open the link in the comment; it can take a minute after the job finishes for GitHub Pages to serve it. Previews are public, like the site.
+
+- The preview job uses no environment and no secret. It never sees `ANTHROPIC_API_KEY` or the App credentials. It pushes only under `pr-preview/` on `gh-pages`, never to the site root.
+- **Fork PRs get no preview.** Their `GITHUB_TOKEN` is read-only, so the job is skipped. To preview a fork PR, push its branch to this repository and open a PR from there.
+
+Every action uses a full commit SHA. The `anthropic` dependency uses an exact version. The built-in `GITHUB_TOKEN` has only `contents: read`, except in **Deploy site** and **Preview site**, which need `contents: write` to push `gh-pages` (and `pull-requests: write` for the preview comment).
 
 ### One-time setup (a repository admin)
 
