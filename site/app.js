@@ -2,12 +2,15 @@
 // links are restricted to http(s). The data is LLM- and third-party-derived.
 
 // Minutes to midnight shown on the clock for each status. The only place this mapping lives.
+// no_change has no entry: a quiet month is not a direction. Its clock is faded and carries the hands of
+// the signal's last directional reading, or shows no hands if there is none.
 const MINUTES_TO_MIDNIGHT = { accelerating: 2, unclear: 7, stabilizing: 15 };
 
 const STATUS = {
   accelerating: { label: "Accelerating", glyph: "▲" },
   stabilizing: { label: "Stabilizing", glyph: "▼" },
   unclear: { label: "Unclear", glyph: "?" },
+  no_change: { label: "No change", glyph: "=" },
 };
 
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -60,9 +63,10 @@ function knownStatus(s) {
   return Object.hasOwn(STATUS, s) ? s : null;
 }
 
-// Clock face. status null → no hands.
-function dial(status, label) {
-  const box = el("div", { class: "dial" });
+// Clock face. A status without minutes (no_change, or null for no reading) → no hands, a label instead,
+// unless `carried` (the last directional status) is given: then its hands on a faded clock.
+function dial(status, label, carried = null) {
+  const box = el("div", { class: carried ? "dial faded" : "dial" });
   const s = svg("svg", { viewBox: "0 0 120 120", role: "img", "aria-label": label });
   const cx = 60, cy = 60, r = 54;
   const rad = (d) => (d * Math.PI) / 180;
@@ -77,8 +81,9 @@ function dial(status, label) {
       x2: cx + (r - 3) * Math.sin(a), y2: cy - (r - 3) * Math.cos(a),
     }));
   }
-  if (status) {
-    const min = MINUTES_TO_MIDNIGHT[status];
+  const shown = carried ?? status;
+  const min = MINUTES_TO_MIDNIGHT[shown];
+  if (min) {
     const minuteDeg = (60 - min) * 6;
     const hourDeg = (11 + (60 - min) / 60) * 30;
     // Wedge from the minute hand to midnight.
@@ -90,11 +95,11 @@ function dial(status, label) {
       x2: cx + len * Math.sin(rad(deg)), y2: cy - len * Math.cos(rad(deg)),
     });
     s.append(hand(hourDeg, 30, "hand hour"));
-    s.append(hand(minuteDeg, 46, status === "unclear" ? "hand minute dashed" : "hand minute"));
+    s.append(hand(minuteDeg, 46, shown === "unclear" ? "hand minute dashed" : "hand minute"));
     s.append(svg("circle", { class: "hub", cx, cy, r: 3.5 }));
   } else {
     const t = svg("text", { class: "empty-label", x: cx, y: cy + 3 });
-    t.textContent = "NO READING";
+    t.textContent = status ? STATUS[status].label.toUpperCase() : "NO READING";
     s.append(t);
   }
   box.append(s);
@@ -103,14 +108,15 @@ function dial(status, label) {
 
 function dialLabel(name, status) {
   if (!status) return `${name}: no reading`;
+  if (!MINUTES_TO_MIDNIGHT[status]) return `${name}: ${STATUS[status].label}.`;
   return `${name}: ${STATUS[status].label}. Clock reads ${MINUTES_TO_MIDNIGHT[status]} minutes to midnight.`;
 }
 
-function statusLine(status) {
+function statusLine(status, text = null) {
   if (!status) return el("div", { class: "status", text: "No reading" });
   return el("div", { class: "status" },
     el("span", { "aria-hidden": "true", text: STATUS[status].glyph }),
-    el("span", { text: STATUS[status].label }));
+    el("span", { text: text ?? STATUS[status].label }));
 }
 
 // Overall dial. `overall` is null until the aggregate rule is defined.
@@ -142,6 +148,16 @@ function renderCard(signal, entries, periods) {
   const lastStatus = newest ? knownStatus(newest.status) : null;
   const name = String(signal.name ?? signal.id);
   const runLabel = (e) => (e.run === "scheduled" ? "scheduled" : "backfilled");
+  // A no_change month carries forward the newest earlier reading that had a direction (one with minutes).
+  const carriedFrom = status === "no_change"
+    ? entries.filter((e) => e.period < latest.period && MINUTES_TO_MIDNIGHT[knownStatus(e.status)])
+      .reduce((a, b) => (!a || b.period > a.period ? b : a), null)
+    : null;
+  const carried = carriedFrom ? knownStatus(carriedFrom.status) : null;
+  const statusText = carried ? `No change since ${formatPeriod(carriedFrom.period)}` : null;
+  const label = carried
+    ? `${name}: ${statusText}. Hands show that reading: ${STATUS[carried].label}, ${MINUTES_TO_MIDNIGHT[carried]} minutes to midnight.`
+    : dialLabel(name, status);
 
   const card = el("article", { class: "card", "aria-labelledby": `sig-${signal.id}` });
   if (status) card.dataset.status = status;
@@ -150,7 +166,7 @@ function renderCard(signal, entries, periods) {
     el("h3", { id: `sig-${signal.id}`, text: name }),
     current ? el("span", { class: "period", text: formatPeriod(current) }) : null));
 
-  const info = el("div", {}, statusLine(status));
+  const info = el("div", {}, statusLine(status, statusText));
   if (latest) {
     const c = Number(latest.confidence);
     const conf = Number.isInteger(c) && c >= 1 && c <= 5 ? `${c}/5` : "unknown";
@@ -158,7 +174,7 @@ function renderCard(signal, entries, periods) {
     info.append(el("p", { class: "meta-line", text: latest.run === "scheduled" ? "Monthly run" : "Backfilled" }));
     info.append(el("p", { class: "meta-line model", text: String(latest.model ?? "model unknown") }));
   }
-  card.append(el("div", { class: "reading" }, dial(status, dialLabel(name, status)), info));
+  card.append(el("div", { class: "reading" }, dial(status, label, carried), info));
 
   let note = "No reading yet for this signal.";
   if (latest) note = String(latest.justification ?? "");
