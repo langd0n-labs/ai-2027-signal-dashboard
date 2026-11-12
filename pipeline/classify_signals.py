@@ -73,10 +73,13 @@ def _anthropic(llm, prompt):
     import json
     import os
 
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if not key:  # each provider has its own key, so a key never reaches another provider's endpoint
+        raise RuntimeError("ANTHROPIC_API_KEY is not set (provider is anthropic)")
+
     import anthropic
 
-    # SIGNALS_LLM_API_KEY is the provider-neutral name; without it the SDK reads ANTHROPIC_API_KEY.
-    response = anthropic.Anthropic(api_key=os.environ.get("SIGNALS_LLM_API_KEY") or None).messages.create(
+    response = anthropic.Anthropic(api_key=key).messages.create(
         model=llm["model"],
         max_tokens=llm["max_tokens"],
         thinking={"type": "adaptive"},
@@ -134,16 +137,21 @@ def _openai(llm, prompt):
     import json
     import os
 
-    key = os.environ.get("SIGNALS_LLM_API_KEY")
-    if not key:
-        raise RuntimeError("SIGNALS_LLM_API_KEY is not set")
-    base = (llm.get("base_url") or "https://api.openai.com/v1").rstrip("/")
+    key = os.environ.get("LLM_API_KEY")
+    if not key:  # never ANTHROPIC_API_KEY: it would be sent as a Bearer token to base_url
+        raise RuntimeError("LLM_API_KEY is not set (provider is openai)")
+    if not llm.get("base_url"):
+        raise RuntimeError("base_url is not set; set it in config.toml or SIGNALS_LLM_BASE_URL")
+    base = llm["base_url"].rstrip("/")
     body = {
         "model": llm["model"],
         "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt}],
-        # No temperature or token cap: reasoning models reject them, and the answer is a short object.
+        # No temperature: reasoning models reject it. max_completion_tokens caps output including reasoning.
+        "max_completion_tokens": llm["max_tokens"],
         "response_format": {"type": "json_schema", "json_schema": {"name": "classification", "strict": True, "schema": SCHEMA}},
     }
+    if llm.get("effort"):  # some OpenAI-compatible servers reject reasoning_effort; remove effort from config.toml for those
+        body["reasoning_effort"] = llm["effort"]
     reply = _post_json(f"{base}/chat/completions", body, {"Authorization": f"Bearer {key}"})
     choice = reply["choices"][0]
     if choice["message"].get("refusal"):

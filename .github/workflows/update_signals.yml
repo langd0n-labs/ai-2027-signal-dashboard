@@ -56,7 +56,9 @@ jobs:
 
       - name: Classify
         env:
-          SIGNALS_LLM_API_KEY: ${{ secrets.LLM_API_KEY || secrets.ANTHROPIC_API_KEY }}
+          # Each provider reads only its own key (anthropic: ANTHROPIC_API_KEY, openai: LLM_API_KEY).
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           SIGNALS_LLM_PROVIDER: ${{ vars.SIGNALS_LLM_PROVIDER }}
           SIGNALS_LLM_MODEL: ${{ vars.SIGNALS_LLM_MODEL }}
           SIGNALS_LLM_EFFORT: ${{ vars.SIGNALS_LLM_EFFORT }}
