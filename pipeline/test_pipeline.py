@@ -121,6 +121,71 @@ class Ollama(unittest.TestCase):
                 self.call(content, **reply)
 
 
+class OpenAICompatible(unittest.TestCase):
+    def call(self, message, finish="stop", env=None, **llm_extra):
+        import io, json, os
+        from unittest import mock
+        from classify_signals import classify
+        sent = {}
+
+        def fake_urlopen(request, timeout):
+            sent.update(url=request.full_url, auth=request.get_header("Authorization"), body=json.loads(request.data))
+            reply = {"model": "gpt-x", "choices": [{"finish_reason": finish, "message": message}]}
+            return io.BytesIO(json.dumps(reply).encode())
+
+        llm = {"provider": "openai", "model": "gpt-x", "base_url": "https://api.groq.com/openai/v1/", "max_tokens": 4000, **llm_extra}
+        with mock.patch("urllib.request.urlopen", fake_urlopen), mock.patch.dict(os.environ, {"LLM_API_KEY": "k"} if env is None else env, clear=True):
+            return classify(llm, "prompt"), sent
+
+    def test_sends_schema_key_and_base_url(self):
+        import json
+        from classify_signals import SCHEMA
+        good = {"content": json.dumps({"status": "stabilizing", "justification": "Fewer filings.", "confidence": 3})}
+        (result, model), sent = self.call(good)
+        self.assertEqual(sent["url"], "https://api.groq.com/openai/v1/chat/completions")
+        self.assertEqual(sent["auth"], "Bearer k")
+        self.assertEqual(sent["body"]["response_format"]["json_schema"]["schema"], SCHEMA)
+        self.assertEqual(sent["body"]["max_completion_tokens"], 4000)
+        self.assertNotIn("reasoning_effort", sent["body"])
+        self.assertEqual((result["status"], model), ("stabilizing", "gpt-x"))
+        _, sent = self.call(good, effort="low")
+        self.assertEqual(sent["body"]["reasoning_effort"], "low")
+
+    def test_never_sends_the_anthropic_key(self):
+        import json
+        good = {"content": json.dumps({"status": "unclear", "justification": "x", "confidence": 2})}
+        with self.assertRaisesRegex(RuntimeError, "LLM_API_KEY"):
+            self.call(good, env={"ANTHROPIC_API_KEY": "secret"})
+
+    def test_rejects_bad_replies_and_missing_key(self):
+        import json
+        good = {"content": json.dumps({"status": "unclear", "justification": "x", "confidence": 2})}
+        for kwargs in ({"message": {"content": None, "refusal": "no"}}, {"message": good, "finish": "length"},
+                       {"message": {"content": json.dumps({"status": "bogus", "justification": "x", "confidence": 2})}},
+                       {"message": good, "env": {}}, {"message": good, "base_url": None}):
+            with self.assertRaises((ValueError, RuntimeError)):
+                self.call(**kwargs)
+
+
+class ProviderConfig(unittest.TestCase):
+    def test_anthropic_reads_only_its_own_key(self):
+        import os
+        from unittest import mock
+        from classify_signals import classify
+        llm = {"provider": "anthropic", "model": "m", "effort": "low", "max_tokens": 10}
+        with mock.patch.dict(os.environ, {"LLM_API_KEY": "other"}, clear=True), self.assertRaisesRegex(RuntimeError, "ANTHROPIC_API_KEY"):
+            classify(llm, "prompt")
+
+    def test_base_url_comes_from_config(self):
+        import os
+        from unittest import mock
+        import run
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(run.load_config()["llm"]["base_url"], "https://api.openai.com/v1")
+        with mock.patch.dict(os.environ, {"SIGNALS_LLM_BASE_URL": "https://api.groq.com/openai/v1"}, clear=True):
+            self.assertEqual(run.load_config()["llm"]["base_url"], "https://api.groq.com/openai/v1")
+
+
 class CheckData(unittest.TestCase):
     def test_good_document_passes(self):
         self.assertEqual(problems(good_doc()), [])

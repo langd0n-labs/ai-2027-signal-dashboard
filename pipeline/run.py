@@ -33,8 +33,8 @@ def load_config():
     with open(Path(__file__).with_name("config.toml"), "rb") as f:
         config = tomllib.load(f)
     llm = config["llm"]
-    for key in ("provider", "model", "effort"):
-        llm[key] = os.environ.get(f"SIGNALS_LLM_{key.upper()}") or llm[key]
+    for key in ("provider", "model", "effort", "base_url"):
+        llm[key] = os.environ.get(f"SIGNALS_LLM_{key.upper()}") or llm.get(key)
     return config
 
 

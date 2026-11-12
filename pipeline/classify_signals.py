@@ -64,15 +64,22 @@ def classify(llm, prompt):
         return _anthropic(llm, prompt)
     if llm["provider"] == "ollama":
         return _ollama(llm, prompt)
+    if llm["provider"] == "openai":
+        return _openai(llm, prompt)
     raise ValueError(f"LLM provider {llm['provider']!r} is not implemented; add a branch in classify_signals.py")
 
 
 def _anthropic(llm, prompt):
     import json
+    import os
+
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if not key:  # each provider has its own key, so a key never reaches another provider's endpoint
+        raise RuntimeError("ANTHROPIC_API_KEY is not set (provider is anthropic)")
 
     import anthropic
 
-    response = anthropic.Anthropic().messages.create(
+    response = anthropic.Anthropic(api_key=key).messages.create(
         model=llm["model"],
         max_tokens=llm["max_tokens"],
         thinking={"type": "adaptive"},
@@ -88,12 +95,23 @@ def _anthropic(llm, prompt):
     return validate(json.loads(text)), response.model
 
 
+def _post_json(url, body, headers=None):
+    import json
+    import urllib.error
+    import urllib.request
+
+    request = urllib.request.Request(url, json.dumps(body).encode(), {"Content-Type": "application/json", **(headers or {})})
+    try:
+        with urllib.request.urlopen(request, timeout=600) as response:
+            return json.load(response)
+    except urllib.error.HTTPError as e:  # the body says why, e.g. "model not found" or "invalid API key"
+        raise RuntimeError(f"HTTP {e.code} from {url}: {e.read().decode(errors='replace')[:200]}") from None
+
+
 def _ollama(llm, prompt):
     """A local model through Ollama (https://ollama.com), for running without an API key. OLLAMA_HOST overrides the address."""
     import json
     import os
-    import urllib.error
-    import urllib.request
 
     host = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
     if "://" not in host:
@@ -106,14 +124,38 @@ def _ollama(llm, prompt):
         "stream": False,
         "options": {"temperature": 0, "num_ctx": num_ctx, "num_predict": min(llm["max_tokens"], 1024)},
     }
-    request = urllib.request.Request(f"{host}/api/chat", json.dumps(body).encode(), {"Content-Type": "application/json"})
-    try:
-        with urllib.request.urlopen(request, timeout=600) as response:
-            reply = json.load(response)
-    except urllib.error.HTTPError as e:  # Ollama's body says why, e.g. "model not found, try pulling it first"
-        raise RuntimeError(f"Ollama HTTP {e.code}: {e.read().decode(errors='replace')[:200]}") from None
+    reply = _post_json(f"{host}/api/chat", body)
     if reply.get("prompt_eval_count", 0) >= num_ctx - body["options"]["num_predict"]:
         raise RuntimeError("prompt may have been truncated to fit the context window")
     if reply.get("done_reason") == "length":
         raise RuntimeError("response hit max_tokens")
     return validate(json.loads(reply["message"]["content"])), reply.get("model", llm["model"])
+
+
+def _openai(llm, prompt):
+    """Any OpenAI-compatible chat completions API (OpenAI, Gemini, Groq, OpenRouter, ...), chosen by base_url."""
+    import json
+    import os
+
+    key = os.environ.get("LLM_API_KEY")
+    if not key:  # never ANTHROPIC_API_KEY: it would be sent as a Bearer token to base_url
+        raise RuntimeError("LLM_API_KEY is not set (provider is openai)")
+    if not llm.get("base_url"):
+        raise RuntimeError("base_url is not set; set it in config.toml or SIGNALS_LLM_BASE_URL")
+    base = llm["base_url"].rstrip("/")
+    body = {
+        "model": llm["model"],
+        "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt}],
+        # No temperature: reasoning models reject it. max_completion_tokens caps output including reasoning.
+        "max_completion_tokens": llm["max_tokens"],
+        "response_format": {"type": "json_schema", "json_schema": {"name": "classification", "strict": True, "schema": SCHEMA}},
+    }
+    if llm.get("effort"):  # some OpenAI-compatible servers reject reasoning_effort; remove effort from config.toml for those
+        body["reasoning_effort"] = llm["effort"]
+    reply = _post_json(f"{base}/chat/completions", body, {"Authorization": f"Bearer {key}"})
+    choice = reply["choices"][0]
+    if choice["message"].get("refusal"):
+        raise RuntimeError("model declined to classify")
+    if choice.get("finish_reason") == "length":
+        raise RuntimeError("response hit the token limit")
+    return validate(json.loads(choice["message"]["content"])), reply.get("model", llm["model"])
