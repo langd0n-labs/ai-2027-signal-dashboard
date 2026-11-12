@@ -127,6 +127,7 @@ a:hover { color: var(--accent); }
 .dial .hand.hour { stroke-width: 4; }
 .dial .hand.dashed { stroke-dasharray: 4 3; }
 .dial .hub { fill: var(--ink); }
+.dial.faded svg { opacity: 0.4; }
 .dial .empty-label { fill: var(--muted); font: 600 9px var(--sans); text-anchor: middle; letter-spacing: 0.08em; }
 
 /* Legend */

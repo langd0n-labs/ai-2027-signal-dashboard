@@ -32,12 +32,12 @@
         <li>a justification of one or two sentences;</li>
         <li>a confidence score from 1 (low) to 5 (high).</li>
       </ul>
-      <p>The model is told to use only the evidence it is given, not what it knows from elsewhere. The model and provider are set in configuration, and each reading records which model produced it. If no source returns data for a signal in a month, that month shows “no reading” instead of a guess.</p>
+      <p>The model is told to use only the evidence it is given, not what it knows from elsewhere. The model and provider are set in configuration, and each reading records which model produced it. If every source fails for a signal in a month, that month shows “no reading” instead of a guess. If the sources work but find nothing notable, the status is “no change”.</p>
       <h2>The four statuses, and no reading</h2>
       <ul>
         <li><strong>Accelerating</strong> and <strong>stabilizing</strong> each need specific evidence in that direction, as defined for the signal. A quiet month is not stabilizing.</li>
         <li><strong>Unclear</strong>: the evidence is mixed or too thin to call.</li>
-        <li><strong>No change</strong>: the sources worked and found nothing notable that month. That is information, but not a direction, so the clock shows no hands.</li>
+        <li><strong>No change</strong>: the sources worked and found nothing notable that month. That is information, but not a direction. The clock keeps the hands of the signal’s last reading that had a direction, faded, and is labelled “No change since” that month. If there is no earlier reading, it shows no hands.</li>
         <li><strong>No reading</strong> is not a status. It means every source failed for that month, so we do not know.</li>
       </ul>
       <h2>Backfilled months</h2>
